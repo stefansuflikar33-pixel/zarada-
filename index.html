@@ -76,7 +76,8 @@ svg{display:block}
 .vh-sub{margin:0 0 2px;font-size:13px;font-weight:650;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
 .vh h1{margin:0;font-size:34px;line-height:1.1;font-weight:800;letter-spacing:-.028em}
 .iconbtn{position:relative;width:44px;height:44px;flex:none;border-radius:50%;border:0;background:var(--card);box-shadow:var(--sh1);display:grid;place-items:center;color:var(--text);padding:0;transition:transform .3s cubic-bezier(.3,1.7,.5,1)}
-.iconbtn:active{transform:scale(.88) rotate(-20deg);transition-duration:.08s}
+.iconbtn:active,
+.iconbtn.is-pressed{transform:scale(.88) rotate(-20deg);transition-duration:.08s}
 .iconbtn svg{width:22px;height:22px}
 .topbar{position:fixed;left:0;right:0;top:0;z-index:30;height:calc(env(safe-area-inset-top) + 46px);padding-top:env(safe-area-inset-top);
   display:flex;align-items:center;justify-content:center;font-weight:700;font-size:17px;pointer-events:none;
@@ -91,7 +92,8 @@ svg{display:block}
 .sec-t{font-size:13px;font-weight:650;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin:22px 6px 8px}
 .ibtn{width:44px;height:44px;margin:-10px -10px -10px 0;border:0;background:none;display:grid;place-items:center;flex:none;padding:0;color:inherit}
 .ibtn span{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;font:italic 700 15px/1 Georgia,"Times New Roman",serif;background:var(--soft);color:var(--muted);transition:transform .28s cubic-bezier(.3,1.7,.5,1)}
-.ibtn:active span{transform:scale(.82)}
+.ibtn:active span,
+.ibtn.is-pressed span{transform:scale(.82)}
 
 /* ---------- Početna ---------- */
 .hero{position:relative;overflow:hidden;isolation:isolate;border-radius:28px;padding:18px 20px 18px;color:#fff;margin-bottom:14px;
@@ -109,7 +111,8 @@ svg{display:block}
 .hero.flash{animation:heroFlash .8s cubic-bezier(.3,1.6,.5,1)}
 @keyframes heroFlash{0%{transform:scale(.95)}45%{transform:scale(1.025)}100%{transform:none}}
 .hero-tap{display:block;width:100%;border:0;background:none;color:inherit;text-align:left;padding:0;margin:0;font:inherit;transition:transform .3s cubic-bezier(.3,1.7,.5,1)}
-.hero-tap:active{transform:scale(.97);transition-duration:.08s}
+.hero-tap:active,
+.hero-tap.is-pressed{transform:scale(.97);transition-duration:.08s}
 .hero-num{transform-origin:left center}
 .hero-num.bump{animation:bump .55s cubic-bezier(.3,1.7,.5,1)}
 @keyframes bump{0%{transform:scale(1)}35%{transform:scale(1.07)}100%{transform:scale(1)}}
@@ -160,11 +163,13 @@ svg{display:block}
 .hg-note{font-size:13.5px;margin-top:8px;opacity:.95}
 .hero-set{margin-top:14px;width:100%;min-height:50px;border:0;border-radius:15px;background:rgba(255,255,255,.2);color:#fff;font-weight:700;font-size:15.5px;
   display:flex;align-items:center;justify-content:space-between;padding:0 16px;transition:transform .28s cubic-bezier(.3,1.7,.5,1)}
-.hero-set:active{transform:scale(.97);transition-duration:.08s}
+.hero-set:active,
+.hero-set.is-pressed{transform:scale(.97);transition-duration:.08s}
 .acts{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:18px}
 .act{border:0;border-radius:22px;background:var(--card);box-shadow:var(--sh1);padding:15px;text-align:left;min-height:112px;display:flex;flex-direction:column;justify-content:space-between;gap:10px;color:var(--text);
   transition:transform .32s cubic-bezier(.3,1.7,.5,1)}
-.act:active{transform:scale(.94);transition-duration:.08s}
+.act:active,
+.act.is-pressed{transform:scale(.94);transition-duration:.08s}
 .act .ai{width:44px;height:44px;border-radius:14px;display:grid;place-items:center}
 .act .ai svg{width:24px;height:24px}
 .act.work .ai{background:linear-gradient(150deg,var(--acc2),var(--acc-deep));color:#fff;box-shadow:0 6px 14px rgba(22,163,74,.3)}
@@ -188,13 +193,16 @@ svg{display:block}
 .tip-main .go{flex:none;font-size:14px;font-weight:700;color:var(--acc-text);display:flex;align-items:center;gap:2px}
 .tip-main .go svg{width:16px;height:16px}
 button.tip-main{transition:transform .28s cubic-bezier(.3,1.7,.5,1)}
-button.tip-main:active{transform:scale(.97);transition-duration:.08s}
+button.tip-main:active,
+button.tip-main.is-pressed{transform:scale(.97);transition-duration:.08s}
 .tip .ibtn{margin:0}
 
 /* ---------- Progres trake ---------- */
-.bar{height:10px;background:var(--soft);border-radius:99px;overflow:hidden}
-.bar>i{display:block;height:100%;width:0;border-radius:99px;background:linear-gradient(90deg,var(--acc2),var(--acc));transition:width 1s cubic-bezier(.22,1,.36,1)}
+.bar{height:10px;background:var(--soft);border-radius:99px;overflow:hidden;isolation:isolate;-webkit-mask-image:-webkit-radial-gradient(white,black)}
+.bar>i{display:block;height:100%;width:100%;border-radius:99px;background:linear-gradient(90deg,var(--acc2),var(--acc));transform:translate3d(-100%,0,0);transition:transform 1s cubic-bezier(.22,1,.36,1)}
 .bar.amber>i{background:var(--amber)}
+.bar.red>i{background:var(--red)}
+.bar.blue>i{background:#5b8def}
 .bar.thin{height:7px}
 .bar-meta{display:flex;flex-wrap:wrap;justify-content:space-between;gap:2px 10px;font-size:13.5px;color:var(--muted);margin-top:8px}
 .bar-meta b{color:var(--text)}
@@ -202,7 +210,8 @@ button.tip-main:active{transform:scale(.97);transition-duration:.08s}
 /* ---------- Mesec ---------- */
 .msw{display:flex;align-items:center;gap:8px;margin:0 0 14px}
 .mbtn{width:46px;height:46px;flex:none;border-radius:15px;border:0;background:var(--card);box-shadow:var(--sh1);display:grid;place-items:center;color:var(--text);padding:0;transition:transform .28s cubic-bezier(.3,1.7,.5,1),opacity .2s}
-.mbtn:active:not(:disabled){transform:scale(.88);transition-duration:.08s}
+.mbtn:active:not(:disabled),
+.mbtn.is-pressed:not(:disabled){transform:scale(.88);transition-duration:.08s}
 .mbtn:disabled{opacity:.3}
 .mbtn svg{width:22px;height:22px}
 .mlabel{flex:1;min-width:0;display:flex;flex-direction:column;align-items:center}
@@ -221,7 +230,8 @@ button.tip-main:active{transform:scale(.97);transition-duration:.08s}
 .day{position:relative;min-height:50px;aspect-ratio:1/1.22;border:0;border-radius:14px;background:var(--card2);color:var(--text);
   display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;padding:2px 1px;min-width:0;
   transition:transform .3s cubic-bezier(.3,1.7,.5,1)}
-.day:active{transform:scale(.88);transition-duration:.08s}
+.day:active,
+.day.is-pressed{transform:scale(.88);transition-duration:.08s}
 .day .dn{font-size:15px;font-weight:700;line-height:1}
 .day .amt{font-size:9.5px;font-weight:700;line-height:1.05;font-variant-numeric:tabular-nums;letter-spacing:-.02em;white-space:nowrap}
 .day .multi{position:absolute;top:5px;right:6px;display:flex;gap:2px}
@@ -272,7 +282,8 @@ button.tip-main:active{transform:scale(.97);transition-duration:.08s}
 /* ---------- Dugmad i polja ---------- */
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;min-height:50px;padding:0 18px;border-radius:16px;border:0;background:var(--soft);color:var(--text);
   font-weight:680;font-size:16.5px;white-space:nowrap;transition:transform .3s cubic-bezier(.3,1.7,.5,1),opacity .2s,background .2s}
-.btn:active:not(:disabled){transform:scale(.94);transition-duration:.08s}
+.btn:active:not(:disabled),
+.btn.is-pressed:not(:disabled){transform:scale(.94);transition-duration:.08s}
 .btn svg{width:19px;height:19px}
 .btn.primary{background:linear-gradient(150deg,var(--acc),var(--acc-deep));color:var(--acc-ink);box-shadow:0 8px 18px rgba(22,163,74,.26)}
 .btn.primary.red{background:var(--red);color:#fff;box-shadow:0 8px 18px rgba(229,72,77,.25)}
@@ -283,7 +294,8 @@ button.tip-main:active{transform:scale(.97);transition-duration:.08s}
 .btn.small{min-height:44px;font-size:15px;padding:0 14px;border-radius:14px}
 .btn.dashed{background:transparent;box-shadow:inset 0 0 0 1.5px var(--line2);color:var(--acc-text);margin-bottom:14px}
 .editbtn{width:50px;height:50px;border:0;background:var(--soft);border-radius:16px;color:var(--muted);display:grid;place-items:center;padding:0;transition:transform .3s cubic-bezier(.3,1.7,.5,1)}
-.editbtn:active{transform:scale(.9);transition-duration:.08s}
+.editbtn:active,
+.editbtn.is-pressed{transform:scale(.9);transition-duration:.08s}
 .editbtn svg{width:20px;height:20px}
 .inp{width:100%;min-height:50px;border:0;border-radius:14px;padding:0 14px;font-size:17px;background:var(--field);min-width:0;color:var(--text);transition:box-shadow .15s}
 .inp:focus{outline:none;box-shadow:inset 0 0 0 2px var(--acc)}
@@ -298,7 +310,8 @@ input[type=date].inp{padding:0 12px;-webkit-appearance:none;appearance:none;disp
 .field{margin-bottom:14px}
 .seg{display:grid;grid-auto-flow:column;grid-auto-columns:1fr;background:var(--soft);border-radius:15px;padding:4px;gap:4px;margin:0 0 14px}
 .seg button{min-height:42px;border:0;border-radius:11px;background:transparent;font-weight:680;color:var(--muted);font-size:15px;transition:background .2s,color .2s,box-shadow .2s,transform .28s cubic-bezier(.3,1.7,.5,1)}
-.seg button:active{transform:scale(.95)}
+.seg button:active,
+.seg button.is-pressed{transform:scale(.95)}
 .seg button.on{background:var(--card);color:var(--text);box-shadow:0 1px 4px rgba(0,0,0,.14)}
 .goal-exp{background:var(--card2);border-radius:14px;padding:13px 14px;font-size:15px}
 .goal-prog{margin-top:16px}
@@ -319,7 +332,8 @@ input[type=date].inp{padding:0 12px;-webkit-appearance:none;appearance:none;disp
 .chk{width:44px;height:48px;flex:none;border:0;background:none;display:grid;place-items:center;padding:0;margin-left:-6px}
 .chk i{width:28px;height:28px;border-radius:50%;box-shadow:inset 0 0 0 2px var(--line2);display:grid;place-items:center;color:transparent;transition:background .25s,box-shadow .25s,transform .35s cubic-bezier(.3,1.7,.5,1)}
 .chk i svg{width:16px;height:16px;stroke-width:3}
-.chk:active i{transform:scale(.8)}
+.chk:active i,
+.chk.is-pressed i{transform:scale(.8)}
 .chk.on i{background:var(--acc);box-shadow:none;color:#fff}
 .chk.pop i{animation:chkPop .5s cubic-bezier(.3,1.7,.5,1)}
 @keyframes chkPop{0%{transform:scale(.6)}60%{transform:scale(1.2)}100%{transform:scale(1)}}
@@ -446,7 +460,8 @@ input[type=date].inp{padding:0 12px;-webkit-appearance:none;appearance:none;disp
 .week .v{font-size:19px;font-weight:750;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .week-msg{font-size:14px;color:var(--muted);margin:12px 2px 0}
 .hist{width:100%;text-align:left;border:0;background:var(--card2);border-radius:16px;padding:12px 14px;margin-top:8px;display:block;color:var(--text);transition:transform .3s cubic-bezier(.3,1.7,.5,1)}
-.hist:active{transform:scale(.97);transition-duration:.08s}
+.hist:active,
+.hist.is-pressed{transform:scale(.97);transition-duration:.08s}
 .hist.sel{box-shadow:inset 0 0 0 2px var(--acc)}
 .hist-top{display:flex;justify-content:space-between;align-items:baseline;gap:8px;font-weight:700}
 .hist-top em{font-style:normal;font-size:12px;font-weight:650;color:var(--acc-text);margin-left:6px}
@@ -458,7 +473,8 @@ input[type=date].inp{padding:0 12px;-webkit-appearance:none;appearance:none;disp
   background:var(--card);background:var(--bar-bg);-webkit-backdrop-filter:saturate(180%) blur(20px);backdrop-filter:saturate(180%) blur(20px);border-top:.5px solid var(--line2)}
 .tab{border:0;background:none;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;min-height:52px;color:var(--muted);font-size:10.5px;font-weight:650;padding:0}
 .tab svg{width:26px;height:26px;transition:transform .35s cubic-bezier(.3,1.7,.5,1)}
-.tab:active svg{transform:scale(.8);transition-duration:.08s}
+.tab:active svg,
+.tab.is-pressed svg{transform:scale(.8);transition-duration:.08s}
 .tab.on{color:var(--acc)}
 .tab.on svg{animation:tabPop .55s cubic-bezier(.3,1.7,.5,1)}
 @keyframes tabPop{0%{transform:scale(.7) translateY(3px)}55%{transform:scale(1.18) translateY(-2px)}100%{transform:none}}
@@ -467,7 +483,8 @@ svg .f{fill:none}
 .fab{position:fixed;z-index:26;right:max(16px,calc(50% - 264px));bottom:calc(76px + env(safe-area-inset-bottom));width:60px;height:60px;border-radius:21px;border:0;padding:0;
   background:linear-gradient(150deg,var(--acc2),var(--acc-deep));color:var(--acc-ink);display:grid;place-items:center;
   box-shadow:0 12px 26px rgba(22,163,74,.38),0 2px 6px rgba(0,0,0,.14);transition:transform .35s cubic-bezier(.3,1.7,.5,1)}
-.fab:active{transform:scale(.86);transition-duration:.08s}
+.fab:active,
+.fab.is-pressed{transform:scale(.86);transition-duration:.08s}
 .fab svg{width:30px;height:30px;stroke-width:2.6;transition:transform .4s cubic-bezier(.3,1.6,.5,1)}
 .fab.open svg{transform:rotate(135deg)}
 
@@ -499,7 +516,8 @@ svg .f{fill:none}
 .qgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding-bottom:4px}
 .qt{border:0;border-radius:20px;background:var(--card2);padding:14px;min-height:100px;text-align:left;display:flex;flex-direction:column;justify-content:space-between;gap:10px;color:var(--text);
   animation:qIn .42s cubic-bezier(.3,1.4,.5,1) both;transition:transform .3s cubic-bezier(.3,1.7,.5,1)}
-.qt:active{transform:scale(.94);transition-duration:.08s}
+.qt:active,
+.qt.is-pressed{transform:scale(.94);transition-duration:.08s}
 @keyframes qIn{from{opacity:0;transform:translateY(14px) scale(.94)}to{opacity:1;transform:none}}
 .qi{width:42px;height:42px;border-radius:14px;display:grid;place-items:center}
 .qgrid.three{grid-template-columns:1fr}
@@ -551,7 +569,8 @@ svg .f{fill:none}
 .sug-lines b{color:var(--text)}
 .chips{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 6px}
 .chip{border:0;background:var(--soft);border-radius:99px;padding:0 16px;font-weight:700;font-size:15px;min-height:44px;color:var(--text);transition:transform .28s cubic-bezier(.3,1.7,.5,1),background .2s}
-.chip:active{transform:scale(.9);transition-duration:.08s}
+.chip:active,
+.chip.is-pressed{transform:scale(.9);transition-duration:.08s}
 .chip.on{background:var(--acc);color:var(--acc-ink)}
 .calc{background:var(--card2);border-radius:16px;padding:4px 14px}
 .calc .r{display:flex;justify-content:space-between;align-items:baseline;gap:10px;padding:10px 0;border-top:1px solid var(--line);font-size:15px}
@@ -581,7 +600,8 @@ svg .f{fill:none}
 .row.job{display:grid;grid-template-columns:44px minmax(0,1fr) 116px 40px;gap:6px;align-items:center}
 .row.job .xbtn{width:40px}
 .star{width:44px;height:50px;border:0;background:var(--soft);color:var(--faint);font-size:20px;border-radius:14px;line-height:1;padding:0;transition:transform .3s cubic-bezier(.3,1.7,.5,1)}
-.star:active{transform:scale(.85)}
+.star:active,
+.star.is-pressed{transform:scale(.85)}
 .star.on{color:#d99a00;background:var(--amber-soft)}
 .add{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px;margin-top:14px;padding-top:14px;border-top:1px dashed var(--line2)}
 .add .full{grid-column:1 / -1}
@@ -614,6 +634,26 @@ svg .f{fill:none}
 .fx-card span{font-size:14px;color:var(--muted);font-weight:600}
 @keyframes fxIn{from{opacity:0;transform:scale(.7) translateY(20px)}to{opacity:1;transform:none}}
 @keyframes fxOut{to{opacity:0;transform:scale(.9) translateY(-10px)}}
+
+/* ---------- Animacije: pritisak, ulazak kartica, nagrada ---------- */
+.xbtn,.pbtn,.mnow,.jopt-head,.wal-move,.emain,.toast button,button.note{transition:transform .32s cubic-bezier(.3,1.7,.5,1)}
+.xbtn:active,.xbtn.is-pressed,.pbtn:active,.pbtn.is-pressed,.mnow:active,.mnow.is-pressed,.wal-move:active,.wal-move.is-pressed,.toast button:active,.toast button.is-pressed{transform:scale(.86);transition-duration:.08s}
+.jopt-head:active,.jopt-head.is-pressed,.emain:active,.emain.is-pressed,button.note:active,button.note.is-pressed{transform:scale(.97);transition-duration:.08s}
+.switch{transition:background .25s,transform .32s cubic-bezier(.3,1.7,.5,1)}
+.switch:active,.switch.is-pressed{transform:scale(.92);transition-duration:.08s}
+.switch:active::after,.switch.is-pressed::after{transform:scale(1.14,.88)}
+.switch.on:active::after,.switch.on.is-pressed::after{transform:translateX(20px) scale(1.14,.88)}
+.fab::after{content:"";position:absolute;inset:0;border-radius:inherit;box-shadow:0 0 0 3px var(--acc2);opacity:0;pointer-events:none}
+.fab.ring::after{animation:fabRing .55s cubic-bezier(.2,.8,.3,1)}
+@keyframes fabRing{0%{opacity:.75;transform:scale(1)}100%{opacity:0;transform:scale(1.65)}}
+.stag{animation:cardIn .52s cubic-bezier(.2,.9,.3,1.12) both;animation-delay:var(--sd,0ms)}
+@keyframes cardIn{from{opacity:0;transform:translate3d(0,18px,0) scale(.97)}to{opacity:1;transform:none}}
+.okpop{position:fixed;left:50%;top:40%;z-index:87;width:86px;height:86px;margin:-43px 0 0 -43px;border-radius:50%;display:grid;place-items:center;pointer-events:none;
+  background:linear-gradient(150deg,var(--acc2),var(--acc-deep));color:#fff;box-shadow:0 16px 36px rgba(22,163,74,.42);animation:okPop .95s cubic-bezier(.3,1.5,.5,1) both}
+.okpop.amber{background:linear-gradient(150deg,#fcd34d,var(--amber));color:#3a2500;box-shadow:0 16px 36px rgba(217,119,6,.38)}
+.okpop svg{width:44px;height:44px;stroke-width:2.8;animation:okTick .42s .1s cubic-bezier(.3,1.8,.5,1) both}
+@keyframes okPop{0%{opacity:0;transform:scale(.35)}24%{opacity:1;transform:scale(1.1)}40%{transform:scale(.97)}52%{transform:scale(1)}76%{opacity:1;transform:scale(1)}100%{opacity:0;transform:translate3d(0,-16px,0) scale(.86)}}
+@keyframes okTick{from{opacity:0;transform:scale(.2) rotate(-35deg)}to{opacity:1;transform:none}}
 
 @media (hover:hover){
   .btn:not(.primary):not(:disabled):hover{filter:brightness(.97)}
@@ -757,16 +797,25 @@ var WD = ['Pon','Uto','Sre','Čet','Pet','Sub','Ned'];
 var $ = function(s, r){ return (r || document).querySelector(s); };
 
 function fmt(n){
-  n = Math.round(Number(n) || 0);
-  var s = Math.abs(n).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
-  return (n < 0 ? '−' : '') + s;
+  n = Number(n);
+  if (!isFinite(n)) n = 0;
+  var r = Math.round(Math.abs(n));
+  var s = r.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+  return (n < 0 && r > 0 ? '−' : '') + s;
 }
 function rsd(n){ return fmt(n) + ' RSD'; }
 function compact(n){ return n < 100000 ? fmt(n) : Math.round(n / 1000) + 'k'; }
 function short(n){ return n >= 10000 ? Math.round(n / 1000) + 'k' : n >= 1000 ? (Math.round(n / 100) / 10).toString().replace('.', ',') + 'k' : String(Math.round(n)); }
+/* Iznos: tačka = hiljade (1.500), zarez = decimale (1500,50); nalepljeno „1500.50“ prevodi formatLive. Čuva se ceo dinar (zaokruženo). */
+function splitAmt(v){
+  var s = String(v == null ? '' : v).replace(/[\s\u00a0]/g, ''), i = s.lastIndexOf(',');
+  var ip = i < 0 ? s : s.slice(0, i), dp = i < 0 ? null : s.slice(i + 1).replace(/\D/g, '').slice(0, 2);
+  return { int: ip.replace(/\D/g, '').slice(0, 10).replace(/^0+(?=\d)/, ''), dec: dp, sep: i };
+}
 function parseAmt(v){
-  var d = String(v == null ? '' : v).replace(/\D/g, '').slice(0, 10);
-  return d ? parseInt(d, 10) : 0;
+  var p = splitAmt(v);
+  var n = (p.int ? parseInt(p.int, 10) : 0) + (p.dec ? parseInt(p.dec, 10) / Math.pow(10, p.dec.length) : 0);
+  return isFinite(n) && n > 0 ? Math.round(n) : 0;
 }
 function plural(n, one, few, many){
   var a = Math.abs(n) % 10, b = Math.abs(n) % 100;
@@ -787,7 +836,20 @@ function parseKey(k){ var p = k.split('-'); return { y: +p[0], m: +p[1] - 1 }; }
 function shiftKey(k, delta){ var p = parseKey(k); var d = new Date(p.y, p.m + delta, 1); return mkey(d.getFullYear(), d.getMonth()); }
 function dim(y, m){ return new Date(y, m + 1, 0).getDate(); }
 function uid(){ return Date.now().toString(36) + Math.random().toString(36).slice(2, 7); }
-function nowParts(){ var d = new Date(); return { y: d.getFullYear(), m: d.getMonth(), d: d.getDate() }; }
+var TZF = null;
+try { TZF = new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/Belgrade', year: 'numeric', month: '2-digit', day: '2-digit' }); } catch (e) {}
+function nowParts(){
+  var d = new Date();
+  if (TZF && TZF.formatToParts) {
+    try {
+      var p = {};
+      TZF.formatToParts(d).forEach(function(x){ p[x.type] = x.value; });
+      var y = +p.year, m = +p.month - 1, dd = +p.day;
+      if (y > 1970 && m >= 0 && m < 12 && dd >= 1) return { y: y, m: m, d: dd };
+    } catch (e) {}
+  }
+  return { y: d.getFullYear(), m: d.getMonth(), d: d.getDate() };
+}
 function ds(y, m, d){ return y + '-' + String(m + 1).padStart(2, '0') + '-' + String(d).padStart(2, '0'); }
 function pd(s){ var p = s.split('-'); return new Date(+p[0], +p[1] - 1, +p[2]); }
 function todayStr(){ return ds(T.y, T.m, T.d); }
@@ -839,8 +901,9 @@ function normalize(s){
       if (!/^\d{4}-\d{2}$/.test(k)) return;
       var m = s.months[k] || {}, days = {};
       if (m.days && typeof m.days === 'object') {
+        var kp = k.split('-'), kn = dim(+kp[0], +kp[1] - 1);
         Object.keys(m.days).forEach(function(d){
-          if (!/^\d{1,2}$/.test(d)) return;
+          if (!/^\d{1,2}$/.test(d) || +d < 1 || +d > kn) return;
           var r = m.days[d] || {}, rec = {};
           if (Array.isArray(r.entries) && r.entries.length) {
             rec.entries = r.entries.map(function(e){
@@ -853,7 +916,7 @@ function normalize(s){
             });
             if (sp.length) rec.spend = sp;
           }
-          if (Object.keys(rec).length) days[d] = rec;
+          if (Object.keys(rec).length) days[String(+d)] = rec;
         });
       }
       var payouts = {};
@@ -1008,7 +1071,7 @@ function jarPlan(j){
   if (j.deadline) {
     var days = daysBetween(t, j.deadline);
     r.daysToDeadline = days;
-    if (days > 0) { r.workDaysLeft = Math.max(1, Math.round(days * wr)); r.perWorkDay = need / r.workDaysLeft; }
+    if (days >= 0) { r.workDaysLeft = Math.max(1, Math.round(days * wr)); r.perWorkDay = need / r.workDaysLeft; }
     else r.overdue = true;
   }
   r.pace = jarPace(j.id);
@@ -1289,14 +1352,14 @@ function bar(key, pct, cls){
   var w = Math.max(0, Math.min(100, +pct || 0));
   var p = barPrev.hasOwnProperty(key) ? barPrev[key] : 0;
   return '<div class="bar' + (cls ? ' ' + cls : '') + '" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="' + Math.floor(w) + '">' +
-    '<i data-bk="' + key + '" data-w="' + w.toFixed(2) + '" style="width:' + p + '%"></i></div>';
+    '<i data-bk="' + key + '" data-w="' + w.toFixed(2) + '" style="transform:translate3d(' + (p - 100) + '%,0,0)"></i></div>';
 }
 function runBars(root, fromZero){
   var els = (root || document).querySelectorAll('[data-bk]'), todo = [], i;
   for (i = 0; i < els.length; i++) {
     var el = els[i];
     if (!isShown(el)) continue;
-    if (fromZero) { el.style.transition = 'none'; el.style.width = '0%'; }
+    if (fromZero) { el.style.transition = 'none'; el.style.transform = 'translate3d(-100%,0,0)'; }
     todo.push(el);
   }
   if (!todo.length) return;
@@ -1304,7 +1367,7 @@ function runBars(root, fromZero){
   todo.forEach(function(el){
     var w = +el.getAttribute('data-w');
     if (fromZero) el.style.transition = '';
-    el.style.width = w + '%';
+    el.style.transform = 'translate3d(' + (w - 100) + '%,0,0)';
     barPrev[el.getAttribute('data-bk')] = w;
   });
 }
@@ -1395,6 +1458,49 @@ function coinFx(j, from, to, dir, amount){
   }, 2000);
 }
 function afterRender(){ runCounts(); runBars(); runPigs(); }
+/* Kartice se pojavljuju jedna za drugom kad se otvori strana */
+function stagger(v){
+  if (!v || reduced()) return;
+  var list = [];
+  Array.prototype.forEach.call(v.children, function(c){
+    if (c.tagName === 'HEADER' || c.hidden || c.classList.contains('msw')) return;
+    if (c.id === 'summary' || c.id === 'jarsList' || c.id === 'walletCard') Array.prototype.forEach.call(c.children, function(x){ list.push(x); });
+    else list.push(c);
+  });
+  list = list.slice(0, 9);
+  list.forEach(function(el, i){ el.classList.remove('stag'); el.style.setProperty('--sd', Math.min(i * 55, 440) + 'ms'); });
+  void v.offsetWidth;
+  list.forEach(function(el){ el.classList.add('stag'); });
+}
+document.addEventListener('animationend', function(e){
+  if (e.animationName === 'cardIn' && e.target.classList) e.target.classList.remove('stag');
+});
+/* Nagrada za potvrđen unos: zeleni krug sa kvačicom (ili žuti za potrošnju) koji iskoči i nestane */
+function okPop(kind){
+  if (reduced()) return;
+  var el = document.createElement('div');
+  el.className = 'okpop' + (kind ? ' ' + kind : '');
+  el.innerHTML = ic(kind === 'amber' ? 'cart' : 'check');
+  document.body.appendChild(el);
+  setTimeout(function(){ el.remove(); }, 1000);
+}
+/* Pritisak na dugme vidi se i na najbržem dodiru (iOS :active traje prekratko); ne blokira klik */
+var pressedEls = [];
+document.addEventListener('pointerdown', function(e){
+  if (e.button > 0) return;
+  var b = e.target.closest ? e.target.closest('button') : null;
+  if (!b || b.disabled) return;
+  b.classList.add('is-pressed'); b.__pt = performance.now(); pressedEls.push(b);
+}, { passive: true });
+function unpress(){
+  var list = pressedEls; pressedEls = [];
+  list.forEach(function(b){
+    var left = 110 - (performance.now() - (b.__pt || 0));
+    if (left > 0) setTimeout(function(){ b.classList.remove('is-pressed'); }, left); else b.classList.remove('is-pressed');
+  });
+}
+['pointerup', 'pointercancel', 'dragstart'].forEach(function(n){ document.addEventListener(n, unpress, { passive: true }); });
+window.addEventListener('blur', unpress);
 function restartAnim(el){ if (!el || reduced()) return; el.classList.remove('anim'); void el.offsetWidth; el.classList.add('anim'); }
 
 /* ================== Prikaz: sve strane ================== */
@@ -1656,7 +1762,7 @@ function renderSummary(){
       joinDays(st.missing) + ' ' + mName + '. Dodirni crveni dan i upiši rad ili slobodan dan, da računica bude tačna.</div>';
   }
   h += '<section class="card"><div class="card-h"><h2>' + hic('chart', 'g') + 'Pregled meseca</h2>' + ibtn('info-month', 'Kako se računa') + '</div>' +
-    '<div class="sum-ost"><span>' + (past ? 'Ostalo ti je' : 'Ostaje ti') + '</span><b class="num' + (st.ostaje < 0 ? ' neg' : '') + '">' + rsd(st.ostaje) + '</b></div>';
+    '<div class="sum-ost"><span>' + (past ? 'Ostalo ti je' : 'Ostaje ti') + '</span><b class="num' + (st.ostaje < 0 ? ' neg' : '') + '">' + countSpan('sum-ost', st.ostaje) + ' RSD</b></div>';
   if (st.goal > 0) {
     h += '<div class="goal-line">' + bar('sum-' + viewKey, st.pct, past && st.remaining > 0 ? 'amber' : '') +
       '<div class="bar-meta num"><span><b>' + Math.floor(st.pct) + '%</b> cilja · ' +
@@ -2009,7 +2115,7 @@ function renderDebts(){
       }
     }
     h += '<div class="debt"><div class="debt-top"><b>' + esc(d.name) + '</b><span class="num">' + Math.floor(pct) + '%</span></div>' +
-      '<div class="debt-amt num">' + fmt(paid) + ' <small>/ ' + rsd(d.total) + ' otplaćeno</small></div>' +
+      '<div class="debt-amt num">' + countSpan('dp-' + d.id, paid) + ' <small>/ ' + rsd(d.total) + ' otplaćeno</small></div>' +
       bar('debt-' + d.id, pct, 'thin') +
       '<div class="jar-lines">' + lines.join('<br>') + '</div>' +
       '<div class="debt-btns"><button type="button" class="btn" data-act="debt-pay" data-id="' + esc(d.id) + '"' + (left > 0 ? '' : ' disabled') + '>Uplati van rate</button>' +
@@ -2037,9 +2143,9 @@ function renderWeek(){
     else if (earned > 0 && saved > earned) msg += ' Odvojio si više nego što si zaradio — odlično.';
   }
   setHTML($('#weekCard'), '<div class="card-h"><h2>' + hic('cal', 'b') + 'Ova nedelja</h2><span class="hint" style="margin:0">' + range + '</span></div>' +
-    '<div class="week num"><div><div class="k">Zarađeno</div><div class="v">' + fmt(earned) + '</div></div>' +
-    '<div><div class="k">Potrošeno</div><div class="v">' + fmt(spent) + '</div></div>' +
-    '<div><div class="k">Odvojeno</div><div class="v">' + fmt(saved) + '</div></div></div>' +
+    '<div class="week num"><div><div class="k">Zarađeno</div><div class="v">' + countSpan('wk-e', earned) + '</div></div>' +
+    '<div><div class="k">Potrošeno</div><div class="v">' + countSpan('wk-s', spent) + '</div></div>' +
+    '<div><div class="k">Odvojeno</div><div class="v">' + countSpan('wk-o', saved) + '</div></div></div>' +
     '<p class="week-msg">' + msg + '</p>');
 }
 function renderCharts(){
@@ -2107,8 +2213,8 @@ function renderCharts(){
   weeks.forEach(function(w, i){ if (w.sum === wmx && wbest < 0) wbest = i; });
   h = '<h3>' + hic('cart', 'r') + 'Potrošnja po nedeljama</h3>';
   if (wmx > 0) {
-    var wb = weeks[wbest];
-    h += '<p class="cap">Najviše: <b>' + wb.from + '–' + wb.to + '. ' + MONTHS[p.m] + '</b> (' + rsd(wb.sum) + ') · prosek ' + rsd(tot / weeks.length) + ' nedeljno.</p><div class="bars wk">';
+    var wb = weeks[wbest], wGone = isCur ? weeks.filter(function(w){ return w.from <= T.d; }).length : weeks.length;
+    h += '<p class="cap">Najviše: <b>' + wb.from + '–' + wb.to + '. ' + MONTHS[p.m] + '</b> (' + rsd(wb.sum) + ') · prosek ' + rsd(tot / Math.max(1, wGone)) + ' nedeljno.</p><div class="bars wk">';
     weeks.forEach(function(w, i){
       var hp = w.sum ? Math.max(2, w.sum / wmx * 100) : 0;
       h += '<div class="b' + (i === wbest ? ' top' : '') + '" style="--d:' + (i * 70) + 'ms" title="' + w.from + '–' + w.to + '.: ' + rsd(w.sum) + '"><em style="bottom:calc(' + hp + '% + 4px)">' + (w.sum ? short(w.sum) : '') + '</em><i style="height:' + hp + '%"></i></div>';
@@ -2215,6 +2321,7 @@ function enterView(name){
   runBars(v, true); runPigs(v, true);
   if (name === 'charts') ['#chartTips', '#chartTipsMonth', '#chartSpend', '#chartWeeks'].forEach(function(x){ restartAnim($(x)); });
   if (name === 'home') restartAnim($('#tips'));
+  stagger(v);
 }
 var scrollRaf = 0;
 function onScroll(){ scrollRaf = 0; $('#topbar').classList.toggle('show', window.scrollY > 48); }
@@ -2317,7 +2424,8 @@ function openQuick(dir){
   }).join('') + '</div>';
   $('#sheetFoot').innerHTML = '';
   openSheet('Brzi unos', { dir: dir });
-  $('#fab').classList.add('open');
+  var fb = $('#fab'); fb.classList.add('open');
+  if (!dir && !reduced()) { fb.classList.remove('ring'); void fb.offsetWidth; fb.classList.add('ring'); }
 }
 
 /* ---------- Dan ---------- */
@@ -2408,7 +2516,7 @@ function saveDay(){
   syncTipTx(key, d);
   var after = computeStats(md, key), rec = md.days[d];
   save(); closeSheet(); renderAll(); popDay(key, d);
-  sfx('cash'); burst(tab === 'home' ? $('#hero .hero-num') : null);
+  sfx('cash'); burst(tab === 'home' ? $('#hero .hero-num') : null); okPop();
   if (before.goal > 0 && before.remaining > 0 && after.remaining <= 0) {
     confetti(); sfx('win'); toast('Mesečni cilj je ostvaren! Bravo.');
     return;
@@ -2442,7 +2550,7 @@ function addTodaySpend(amount, note, acc){
   var item = { id: uid(), amount: amount, note: note || '' };
   r.spend.push(item);
   walletSpend(item, todayStr(), acc);
-  save(); sfx('whoosh'); renderAll(); popDay(key, d);
+  save(); sfx('whoosh'); renderAll(); popDay(key, d); okPop('amber');
   var ins = spendInsight(amount, note);
   if (ins) setTimeout(function(){ if (!sheet) openInsight(ins, amount, { key: key, d: d, id: item.id }); }, 650);
   toast('Potrošnja: ' + rsd(amount) + ' · danas ukupno ' + rsd(spendDay(r)), 'Vrati', function(){
@@ -2666,8 +2774,13 @@ function syncRataForDebt(d){
   var cm = ensureMonth(curKey);
   var ex = cm.expenses.filter(function(e){ return e.debtId === d.id; })[0];
   if (ex) {
-    if (!ex.paid) { ex.name = 'Rata: ' + d.name; ex.amount = Math.min(d.monthly, debtLeft(d)); ex.due = d.dueDay; }
-    if (!ex.paid && (!d.monthly || debtLeft(d) <= 0)) cm.expenses = cm.expenses.filter(function(e){ return e !== ex; });
+    if (!ex.paid) {
+      var saved = ex.saved || 0, left = debtLeft(d), amt = Math.min(d.monthly, left + saved);
+      ex.name = 'Rata: ' + d.name; ex.due = d.dueDay;
+      if (saved > 0 && (left <= 0 || saved >= amt)) { ex.amount = saved; ex.paid = true; }
+      else if (!d.monthly || left <= 0) cm.expenses = cm.expenses.filter(function(e){ return e !== ex; });
+      else ex.amount = amt;
+    }
   } else if (d.monthly > 0 && debtLeft(d) > 0) cm.expenses.push(rataExpense(d));
 }
 
@@ -2686,16 +2799,27 @@ function toast(msg, actLabel, actFn){
 function hideToast(){ var el = $('#toast'); el.classList.remove('show', 'act'); }
 
 /* ================== Unos iznosa (1.000 format dok kucaš) ================== */
-function formatLive(el){
-  var pos = el.selectionStart == null ? el.value.length : el.selectionStart;
-  var digitsBefore = el.value.slice(0, pos).replace(/\D/g, '').length;
-  var raw = el.value.replace(/\D/g, '').slice(0, 10).replace(/^0+(?=\d)/, '');
-  var f = raw ? fmt(parseInt(raw, 10)) : '';
+function formatLive(el, ev){
+  var raw = el.value, it = (ev && ev.inputType) || '', data = ev && ev.data;
+  var pos = el.selectionStart == null ? raw.length : el.selectionStart;
+  if (!/delete/i.test(it) && !(data && data.length === 1) && /^\s*\d+\.\d{1,2}\s*$/.test(raw)) raw = raw.replace('.', ',');
+  var p = splitAmt(raw);
+  var f = (p.int || p.dec !== null) ? fmt(p.int ? parseInt(p.int, 10) : 0) : '';
+  if (p.dec !== null) f += ',' + p.dec;
   el.value = f;
-  var i = 0, c = 0;
-  while (i < f.length && c < digitsBefore) { if (/\d/.test(f[i])) c++; i++; }
-  if (document.activeElement === el) { try { el.setSelectionRange(i, i); } catch (e) {} }
+  var comma = f.indexOf(','), c = 0;
+  if (p.sep >= 0 && pos > p.sep) c = comma + 1 + Math.min(p.dec.length, raw.slice(p.sep + 1, pos).replace(/\D/g, '').length);
+  else {
+    var want = raw.slice(0, pos).replace(/\D/g, '').length, k = 0;
+    while (c < f.length && k < want) { if (/\d/.test(f[c])) k++; c++; }
+    if (comma >= 0 && c > comma) c = comma;
+  }
+  if (document.activeElement === el) { try { el.setSelectionRange(c, c); } catch (e) {} }
 }
+document.addEventListener('focusout', function(e){
+  var t = e.target;
+  if (t.classList && t.classList.contains('amt-in') && t.value.indexOf(',') >= 0) { var a = parseAmt(t.value); t.value = a ? fmt(a) : ''; }
+});
 
 /* ================== Događaji ================== */
 document.addEventListener('touchstart', function(){}, { passive: true });
@@ -2703,7 +2827,7 @@ document.addEventListener('touchstart', function(){}, { passive: true });
 document.addEventListener('input', function(e){
   var t = e.target;
   if (!t.classList) return;
-  if (t.classList.contains('amt-in')) formatLive(t);
+  if (t.classList.contains('amt-in')) formatLive(t, e);
   var md, id;
   if (t.id === 'goalInput') {
     md = ensureMonth(viewKey); md.goalManual = parseAmt(t.value); save(); renderLive();
@@ -2919,7 +3043,7 @@ document.addEventListener('click', function(e){
       if (!tg) { toast('Upiši cilj.'); focusNow($('#fTarget')); return; }
       if (sheet.id) { j = jarById(sheet.id); j.name = nm; j.target = tg; j.deadline = dl; }
       else state.jars.push({ id: uid(), name: nm, target: tg, deadline: dl, kind: 'goal' });
-      save(); closeSheet(); renderAll(); toast('Kasica sačuvana');
+      save(); closeSheet(); renderAll(); okPop(); toast('Kasica sačuvana');
       break;
     case 'jar-del':
       j = jarById(sheet.id);
@@ -3027,7 +3151,7 @@ document.addEventListener('click', function(e){
         if (already) state.debtTx.push({ id: uid(), debtId: debt.id, date: todayStr(), amount: Math.min(already, dt), ref: 'start' });
       }
       syncRataForDebt(debt);
-      save(); closeSheet(); renderAll(); toast('Dug sačuvan' + (dm ? ' · rata je u troškovima' : ''));
+      save(); closeSheet(); renderAll(); okPop(); toast('Dug sačuvan' + (dm ? ' · rata je u troškovima' : ''));
       break;
     case 'debt-del':
       var dbt = state.debts.filter(function(x){ return x.id === sheet.id; })[0];
@@ -3088,7 +3212,7 @@ document.addEventListener('click', function(e){
         if (!en && !ea) { toast('Upiši naziv ili iznos.'); focusNow($('#fName')); return; }
         md.expenses.push({ id: uid(), name: en || 'Trošak', amount: ea, due: ed, paid: false, debtId: '' });
       }
-      save(); closeSheet(); renderAll(); toast(eId ? 'Trošak sačuvan' : 'Dodat trošak: ' + (en || 'Trošak'));
+      save(); closeSheet(); renderAll(); okPop(); toast(eId ? 'Trošak sačuvan' : 'Dodat trošak: ' + (en || 'Trošak'));
       break;
     case 'exp-del':
       var xKey = sheet && sheet.key ? sheet.key : viewKey;
@@ -3445,6 +3569,7 @@ setupIcon();
 ready = true;
 renderAll();
 renderSyncUi();
+stagger($('#v-home'));
 if (loggedIn()) doSync({ force: true });
 $('#topTitle').textContent = TITLES.home;
 })();
