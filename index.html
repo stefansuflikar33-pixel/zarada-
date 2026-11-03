@@ -382,7 +382,37 @@ input[type=date].inp{padding:0 12px;-webkit-appearance:none;appearance:none;disp
 .tx{display:grid;grid-template-columns:minmax(0,1fr) auto 44px;gap:6px;align-items:center;padding:2px 0;border-top:1px solid var(--line);font-size:14.5px}
 .tx .note2{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .tx .note2 small{color:var(--muted);margin-right:6px}
-.txs{margin-top:14px}
+.txs{margin-top:4px}
+.tx .acc{font-size:10.5px;font-weight:750;color:var(--blue-text);background:var(--blue-soft);border-radius:99px;padding:1px 6px;margin-left:6px}
+.wal{position:relative;overflow:hidden;isolation:isolate;border-radius:28px;padding:18px 20px 12px;color:#fff;margin-bottom:14px;
+  background:linear-gradient(150deg,#2dd4bf,#0f5f58);box-shadow:0 16px 34px rgba(15,95,88,.3)}
+.wal::before{content:"";position:absolute;z-index:-1;width:280px;height:280px;right:-100px;top:-130px;border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,.3),rgba(255,255,255,0) 70%)}
+.wal-top{display:flex;justify-content:space-between;align-items:center}
+.wal-lbl{font-size:15.5px;font-weight:650;opacity:.92}
+.wal .ibtn span{background:rgba(255,255,255,.22);color:#fff}
+.wal-num{font-size:clamp(44px,13vw,60px);font-weight:800;letter-spacing:-.04em;line-height:1;margin:6px 0 2px;white-space:nowrap;transform-origin:left center}
+.wal-num .cur{font-size:.32em;font-weight:700;opacity:.82;margin-left:6px;letter-spacing:0}
+.wal-mini{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px;background:rgba(255,255,255,.15);border-radius:16px;padding:10px 12px}
+.wal-mini .k{font-size:12px;opacity:.88;font-weight:600;white-space:nowrap}
+.wal-mini .v{font-size:17px;font-weight:780;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.wal-btns{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-top:14px}
+.wal-btns .btn{background:rgba(255,255,255,.2);color:#fff;min-height:50px;font-size:15.5px;padding:0 6px}
+.wal-btns .btn.main{background:#fff;color:#0f5f58;box-shadow:0 6px 16px rgba(0,0,0,.15)}
+.wal-move{display:block;margin:6px auto 0;border:0;background:none;color:#fff;opacity:.92;font-weight:650;font-size:14px;min-height:44px;padding:0 12px}
+.env{display:block;height:4px;border-radius:99px;background:var(--soft);margin-top:6px;overflow:hidden;max-width:170px}
+.env>i{display:block;height:100%;background:var(--amber);border-radius:99px}
+.alrow{display:grid;grid-template-columns:minmax(0,1fr) 132px;gap:10px;align-items:center;padding:9px 0;border-top:1px solid var(--line)}
+.alrow b{display:block;font-size:15.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.alrow small{display:flex;gap:6px;align-items:center;flex-wrap:wrap;font-size:12.5px;color:var(--muted);margin-top:2px}
+.alsum{font-size:14px;color:var(--muted);padding:12px 2px 2px;line-height:1.45}
+.alsum b{color:var(--text)}
+.alsum.warn,.alsum.warn b{color:var(--amber-text)}
+.ins-emoji{font-size:66px;text-align:center;line-height:1;margin:2px 0 8px;animation:wobble 1.1s cubic-bezier(.3,1.6,.5,1) both}
+@keyframes wobble{0%{transform:scale(.3) rotate(-30deg)}40%{transform:scale(1.18) rotate(12deg)}60%{transform:rotate(-8deg)}80%{transform:rotate(4deg)}100%{transform:none}}
+.ins-h{text-align:center;font-size:17px;font-weight:750;margin:0 0 10px}
+.ins-list{display:grid;gap:8px;margin:6px 0}
+.ins-list div{background:var(--card2);border-radius:14px;padding:11px 13px;font-size:15px;line-height:1.4;animation:tipIn .45s cubic-bezier(.2,.9,.3,1.12) both}
+.ins-tip{background:var(--acc-soft);color:var(--acc-text);border-radius:14px;padding:12px 14px;font-size:15px;font-weight:600;margin-top:10px;line-height:1.45}
 
 /* ---------- Grafikoni ---------- */
 .chart h3{font-size:18px;font-weight:750;letter-spacing:-.01em;margin:0 0 6px;display:flex;align-items:center}
@@ -643,9 +673,9 @@ svg .f{fill:none}
       <div class="vh-tt"><h1>Kasice</h1></div>
       <button type="button" class="iconbtn" data-act="settings" aria-label="Podešavanja" data-ic="gear"></button>
     </header>
+    <section id="walletCard"></section>
     <section class="card" id="jarsTop"></section>
     <div id="jarsList"></div>
-    <section class="card" id="walletCard"></section>
   </section>
 
   <!-- TROŠKOVI -->
@@ -833,8 +863,10 @@ function normalize(s){
         goalManual: toInt(m.goalManual),
         expenses: Array.isArray(m.expenses) ? m.expenses.map(function(e){
           var due = toInt(e.due);
-          return { id: String(e.id || uid()), name: String(e.name || ''), amount: toInt(e.amount),
+          var eo = { id: String(e.id || uid()), name: String(e.name || ''), amount: toInt(e.amount),
             due: due > 31 ? 31 : due, paid: !!e.paid, debtId: e.debtId ? String(e.debtId) : '' };
+          if (toInt(e.saved)) eo.saved = toInt(e.saved);
+          return eo;
         }) : [],
         days: days,
         payouts: payouts
@@ -842,7 +874,11 @@ function normalize(s){
     });
   }
   if (Array.isArray(s.wallet)) out.wallet = s.wallet.filter(function(t){ return t && toSigned(t.amount); }).map(function(t){
-    return { id: String(t.id || uid()), date: okDate(t.date) || '2000-01-01', amount: toSigned(t.amount), note: String(t.note || '') };
+    var wo = { id: String(t.id || uid()), date: okDate(t.date) || '2000-01-01', amount: toSigned(t.amount), note: String(t.note || '') };
+    if (t.acc === 'bank') wo.acc = 'bank';
+    if (t.kind) wo.kind = String(t.kind);
+    if (t.ref) wo.ref = String(t.ref);
+    return wo;
   });
   if (Array.isArray(s.jars)) out.jars = s.jars.filter(function(j){ return j && j.id; }).map(function(j){
     return { id: String(j.id), name: String(j.name || 'Kasica'), target: toInt(j.target), deadline: okDate(j.deadline), kind: j.kind === 'emergency' ? 'emergency' : 'goal' };
@@ -865,8 +901,10 @@ function normalize(s){
     var share = toInt(s.settings.tipShare);
     if ([10, 20, 30, 50].indexOf(share) >= 0) out.settings.tipShare = share;
   }
+  if (okDate(s.walletFrom)) out.walletFrom = s.walletFrom;
   return out;
 }
+function ensureWalletFrom(){ if (!state.walletFrom) state.walletFrom = todayStr(); }
 
 var storageOk = true, ready = false;
 /* Sinhronizacija (Supabase) i lična podešavanja prikaza — posebni ključevi, glavni podaci se ne menjaju */
@@ -1160,6 +1198,7 @@ var state = load();
 var viewKey = curKey;
 var sheet = null;
 ensureMonth(curKey);
+ensureWalletFrom();
 save();
 
 /* ================== Ikonice ================== */
@@ -1697,23 +1736,209 @@ function renderJars(){
   h += '<button type="button" class="btn dashed block" data-act="jar-new">' + ic('plus') + 'Novi cilj štednje</button>';
   setHTML($('#jarsList'), h);
 }
+function walBal(acc){ return state.wallet.reduce(function(sum, t){ return (acc === 'bank') === (t.acc === 'bank') ? sum + t.amount : sum; }, 0); }
+function needLeft(){ var md = state.months[curKey]; return md ? md.expenses.reduce(function(sum, e){ return e.paid ? sum : sum + Math.max(0, (e.amount || 0) - (e.saved || 0)); }, 0) : 0; }
 function renderWallet(){
-  var bal = state.wallet.reduce(function(s, t){ return s + t.amount; }, 0);
+  var cash = walBal('cash'), bank = walBal('bank'), free = cash + bank - needLeft();
   var list = state.wallet.slice().sort(function(a, b){ return a.date < b.date ? 1 : a.date > b.date ? -1 : 0; }).slice(0, 5);
-  var h = '<div class="card-h"><h2>' + hic('wallet', 'b') + 'Novčanik (keš)</h2></div>' +
-    '<div class="wallet-bal' + (bal < 0 ? ' neg' : '') + '">' + countSpan('wal', bal) + ' <small>RSD</small></div>' +
-    '<div class="two"><button type="button" class="btn primary" data-act="wal-in">' + ic('plus') + 'Ubaci</button><button type="button" class="btn" data-act="wal-out">− Izvadi</button></div>';
+  var h = '<div class="wal"><div class="wal-top"><span class="wal-lbl">U novčaniku (keš)</span>' + ibtn('info-wallet', 'Kako radi novčanik') + '</div>' +
+    '<div class="wal-num">' + countSpan('wal', cash) + '<span class="cur">RSD</span></div>' +
+    '<div class="wal-mini"><div><div class="k">Na računu</div><div class="v">' + countSpan('walb', bank) + '</div></div>' +
+      '<div><div class="k">Slobodno za trošenje</div><div class="v">' + countSpan('walf', free) + '</div></div></div>' +
+    '<div class="wal-btns"><button type="button" class="btn" data-act="wal-in">+ Ubaci</button><button type="button" class="btn" data-act="wal-out">Potrošio</button>' +
+      '<button type="button" class="btn main" data-act="wal-alloc">Raspodeli</button></div>' +
+    '<button type="button" class="wal-move" data-act="wal-move">⇄ Prebaci keš ↔ račun</button></div>';
+  h += '<section class="card"><div class="card-h"><h2>' + hic('wallet', 'b') + 'Poslednje promene</h2></div>';
   if (list.length) {
     h += '<div class="txs">' + list.map(function(t){
-      return '<div class="tx"><span class="note2"><small>' + fmtDate(t.date) + '</small>' + esc(t.note || (t.amount > 0 ? 'Ubačeno' : 'Izvađeno')) + '</span>' +
+      return '<div class="tx"><span class="note2"><small>' + fmtDate(t.date) + '</small>' + esc(t.note || (t.amount > 0 ? 'Ubačeno' : 'Izvađeno')) + (t.acc === 'bank' ? '<span class="acc">račun</span>' : '') + '</span>' +
         '<b class="num ' + (t.amount > 0 ? 'pos' : 'neg') + '">' + (t.amount > 0 ? '+' : '') + fmt(t.amount) + '</b>' +
         '<button type="button" class="xbtn" data-act="wal-del" data-id="' + esc(t.id) + '" aria-label="Obriši">' + ic('x') + '</button></div>';
     }).join('') + '</div>';
-  }
-  h += '<p class="hint">Stanje keša koji nosiš kod sebe. Upisuješ ručno šta ulazi i izlazi.</p>';
+  } else h += '<p class="empty">Još nema promena. Ubaci koliko trenutno imaš u kešu i na računu.</p>';
+  h += '<p class="hint">Bakšiš ulazi u keš sam kad sačuvaš dan, potrošnja izlazi sama, a plata ulazi na račun kad upišeš isplatu.</p></section>';
   setHTML($('#walletCard'), h);
 }
 
+/* ---------- Novčanik: račun, raspodela, pametni saveti ---------- */
+function walletSpend(item, date, acc){
+  if (!state.walletFrom || date < state.walletFrom) return;
+  var t = { id: uid(), date: date, amount: -item.amount, note: item.note || 'Potrošnja', kind: 'sp', ref: 'sp:' + item.id };
+  if (acc === 'bank') t.acc = 'bank';
+  state.wallet.push(t);
+}
+function syncTipTx(key, d){
+  var p = parseKey(key), date = ds(p.y, p.m, d);
+  if (!state.walletFrom || date < state.walletFrom) return;
+  var md = state.months[key], tip = tipDay(md && md.days[d]), ref = 'tip:' + key + ':' + d;
+  var tx = state.wallet.filter(function(t){ return t.ref === ref; })[0];
+  if (tip > 0) { if (tx) tx.amount = tip; else state.wallet.push({ id: uid(), date: date, amount: tip, note: 'Bakšiš ' + d + '. ' + MONTHS[p.m], kind: 'tip', ref: ref }); }
+  else if (tx) state.wallet = state.wallet.filter(function(t){ return t !== tx; });
+}
+function syncPayTx(key, jobId, amt, name){
+  var p = parseKey(key), ref = 'pay:' + key + ':' + jobId;
+  var tx = state.wallet.filter(function(t){ return t.ref === ref; })[0];
+  if (amt > 0) { if (tx) tx.amount = amt; else state.wallet.push({ id: uid(), date: todayStr(), amount: amt, note: 'Plata za ' + MONTHS[p.m] + (name ? ' · ' + name : ''), acc: 'bank', kind: 'pay', ref: ref }); }
+  else if (tx) state.wallet = state.wallet.filter(function(t){ return t !== tx; });
+}
+function accSeg(act, cur, a, b){
+  return '<div class="seg"><button type="button" data-act="' + act + '" data-v="cash" class="' + (cur !== 'bank' ? 'on' : '') + '">' + a + '</button>' +
+    '<button type="button" data-act="' + act + '" data-v="bank" class="' + (cur === 'bank' ? 'on' : '') + '">' + b + '</button></div>';
+}
+function allocTargets(){
+  var md = monthFor(curKey), st = computeStats(md, curKey), rows = [];
+  md.expenses.forEach(function(e){
+    if (e.paid) return;
+    var need = Math.max(0, (e.amount || 0) - (e.saved || 0));
+    if (need > 0) rows.push({ key: 'e:' + e.id, type: 'e', id: e.id, name: e.name || 'Trošak', need: need, due: e.due, debt: !!e.debtId, ds: dueState(e, st) });
+  });
+  rows.sort(function(a, b){ return (a.ds === 'late' ? 0 : 1) - (b.ds === 'late' ? 0 : 1) || (a.due || 99) - (b.due || 99); });
+  state.debts.forEach(function(d){
+    var left = debtLeft(d);
+    if (left <= 0 || md.expenses.some(function(e){ return e.debtId === d.id && !e.paid; })) return;
+    rows.push({ key: 'd:' + d.id, type: 'd', id: d.id, name: 'Dodatno na dug: ' + d.name, need: left });
+  });
+  state.jars.forEach(function(j){
+    if (jarLocked(j)) return;
+    var p = jarPlan(j);
+    if (!p.done) rows.push({ key: 'j:' + j.id, type: 'j', id: j.id, name: 'Kasica: ' + j.name, need: p.need });
+  });
+  return rows;
+}
+function allocSuggest(total, rows){
+  var left = total, v = {};
+  rows.forEach(function(r){ if (r.type === 'e' && left > 0) { var a = Math.min(r.need, left); v[r.key] = a; left -= a; } });
+  var jr = rows.filter(function(r){ return r.type === 'j'; })[0];
+  if (jr && left > 0) { v[jr.key] = Math.min(jr.need, left); }
+  return v;
+}
+function openAlloc(){
+  var rows = allocTargets();
+  if (!rows.length) { toast('Nema šta da se raspodeli — računi su plaćeni, a kasice pune ili zaključane.'); return; }
+  sheet = { mode: 'alloc', acc: 'cash', rows: rows, vals: {}, manual: false, total: 0 };
+  renderAllocSheet();
+  openSheet('Raspodeli novac');
+  focusNow($('#alTotal'));
+}
+function renderAllocSheet(){
+  var o = sheet, bal = walBal(o.acc);
+  var h = accSeg('al-acc', o.acc, 'Iz keša', 'Sa računa') +
+    '<div class="field"><label class="lbl" for="alTotal">Koliko odvajaš (' + (o.acc === 'bank' ? 'na računu' : 'u kešu') + ' imaš ' + rsd(bal) + ')</label>' + moneyInput('id="alTotal"', o.total, '0', 'big') + '</div>' +
+    (bal > 0 ? '<div class="chips"><button type="button" class="chip num" data-act="al-all" data-v="' + bal + '">Sve: ' + fmt(bal) + '</button>' +
+      (bal >= 2 ? '<button type="button" class="chip num" data-act="al-all" data-v="' + Math.round(bal / 2) + '">Pola: ' + fmt(Math.round(bal / 2)) + '</button>' : '') + '</div>' : '') +
+    '<p class="q" style="margin-top:12px">Predlog: prvo ono što kasni ili ima najbliži rok, pa rate, a ostatak u kasicu. Iznose možeš da menjaš.</p>' +
+    '<div class="alist">' + o.rows.map(function(rw){
+      var badge = rw.ds === 'late' ? '<span class="badge red">kasni</span>' : rw.ds === 'soon' ? '<span class="badge amber">uskoro</span>' : rw.debt ? '<span class="badge gray">rata</span>' : rw.type === 'j' ? '<span class="badge green">štednja</span>' : '';
+      return '<div class="alrow"><div><b>' + esc(rw.name) + '</b><small>' + badge + 'fali ' + rsd(rw.need) + (rw.due ? ' · rok ' + rw.due + '.' : '') + '</small></div>' +
+        moneyInput('data-al="' + esc(rw.key) + '"', o.vals[rw.key] || 0, '0') + '</div>';
+    }).join('') + '</div><div class="alsum" id="alSum"></div>';
+  $('#sheetBody').innerHTML = h;
+  $('#sheetFoot').innerHTML = '<button type="button" class="btn primary block" data-act="al-ok">Raspodeli</button>' +
+    '<button type="button" class="btn ghost block" data-act="al-suggest">Predloži ponovo</button>';
+  updAllocSum();
+}
+function allocFill(){
+  sheet.rows.forEach(function(rw){ var el = byAttr($('#sheetBody'), 'data-al', rw.key); if (el) el.value = sheet.vals[rw.key] ? fmt(sheet.vals[rw.key]) : ''; });
+  updAllocSum();
+}
+function updAllocSum(){
+  var o = sheet, sum = 0, el = $('#alSum'); if (!el) return;
+  Object.keys(o.vals).forEach(function(k){ sum += o.vals[k] || 0; });
+  var rest = o.total - sum, bal = walBal(o.acc), warn = rest < 0 || o.total > bal;
+  el.className = 'alsum' + (warn ? ' warn' : '');
+  el.innerHTML = 'Raspoređeno <b>' + fmt(sum) + '</b> od ' + fmt(o.total) + ' RSD · ' +
+    (rest >= 0 ? 'ostaje u novčaniku <b>' + fmt(bal - sum) + '</b>' : '<b>' + fmt(-rest) + ' više nego što odvajaš</b>') +
+    (o.total > bal ? '<br>Pažnja: ' + (o.acc === 'bank' ? 'na računu' : 'u kešu') + ' imaš samo ' + rsd(bal) + '.' : '');
+}
+function doAlloc(){
+  var o = sheet, sum = 0, parts = [], filled = [], jarFx = null, md = ensureMonth(curKey);
+  Object.keys(o.vals).forEach(function(k){ sum += o.vals[k] || 0; });
+  if (!sum) { toast('Upiši iznos bar za jednu stavku.'); return; }
+  if (o.total && sum > o.total) { toast('Raspodelio si više nego što odvajaš (' + rsd(o.total) + ').'); return; }
+  sum = 0;
+  o.rows.forEach(function(rw){
+    var a = Math.min(o.vals[rw.key] || 0, rw.need);
+    if (a <= 0) return;
+    if (rw.type === 'e') {
+      var ex = md.expenses.filter(function(x){ return x.id === rw.id; })[0]; if (!ex) return;
+      ex.saved = (ex.saved || 0) + a;
+      if (ex.debtId && state.debts.some(function(x){ return x.id === ex.debtId; })) {
+        state.debtTx.push({ id: uid(), debtId: ex.debtId, date: todayStr(), amount: a, ref: 'al:' + curKey + ':' + ex.id });
+        if (ex.saved >= ex.amount) ex.paid = true;
+      }
+      if (ex.saved >= ex.amount) filled.push(ex);
+    } else if (rw.type === 'd') {
+      var dbt = state.debts.filter(function(x){ return x.id === rw.id; })[0]; if (!dbt) return;
+      state.debtTx.push({ id: uid(), debtId: dbt.id, date: todayStr(), amount: a, ref: '' });
+      syncRataForDebt(dbt);
+    } else {
+      var j = jarById(rw.id); if (!j) return;
+      if (!jarFx) { jarFx = { j: j, from: jarPlan(j).pct, amount: a }; coinHold['jar-' + j.id] = true; }
+      state.jarTx.push({ id: uid(), jarId: j.id, date: todayStr(), amount: a, note: 'Raspodela' });
+    }
+    sum += a; parts.push(rw.name.replace(/^Kasica: |^Dodatno na dug: /, '') + ' ' + fmt(a));
+  });
+  var t = { id: uid(), date: todayStr(), amount: -sum, note: 'Raspodela: ' + parts.join(', '), kind: 'al' };
+  if (o.acc === 'bank') t.acc = 'bank';
+  state.wallet.push(t);
+  save(); closeSheet(); renderAll();
+  sfx('cash'); burst($('#walletCard .wal-num'));
+  if (jarFx) coinFx(jarFx.j, jarFx.from, jarPlan(jarFx.j).pct, 1, jarFx.amount);
+  var done = filled.map(function(x){ return x.name || 'Trošak'; });
+  if (done.length) {
+    confetti(); sfx('win');
+    var unpaid = filled.filter(function(x){ return !x.paid; }).map(function(x){ return x.name || 'Trošak'; });
+    toast('Koverta puna: ' + done.join(', ') + (unpaid.length ? ' — označi ✓ u Troškovima kad platiš' : ' — rata plaćena ✓'));
+  } else toast('Raspoređeno ' + rsd(sum) + ' · ' + parts.join(', '));
+}
+var IMPULSE = [
+  { re: /kladion|tiket|kock|loto|kazino|slot|mozzart|meridian|maxbet|admiral|soccer|balkan ?bet/i, c: 'kocka', e: '🎰' },
+  { re: /cigar|duvan|vape|iqos|nargil|pljug/i, c: 'cig', e: '🚬' },
+  { re: /alkohol|pivo|piva|vino|rakij|votk|viski|izlaz|klub|splav|žurk|zurk|kafan|šank|sank/i, c: 'izlaz', e: '🍻' },
+  { re: /wolt|glovo|dostav|mek|mcdon|kfc|burger|pica|pice|picerij|giros|fast/i, c: 'hrana', e: '🍔' },
+  { re: /igric|skin|steam|gaming|loot|bucks|psn|xbox|nintendo/i, c: 'igre', e: '🎮' },
+  { re: /energet|red ?bull|monster|slatki|čips|cips|grickal/i, c: 'sitno', e: '🍫' }
+];
+function spendInsight(amount, note){
+  if (ui.smart === false) return null;
+  var hit = null;
+  IMPULSE.some(function(x){ if (x.re.test(note || '')) { hit = x; return true; } return false; });
+  var ti = todayInfo();
+  if (!hit && !(amount >= 1500 && ti.net < 0)) return null;
+  var lines = [], mj = mainJob();
+  if (mj && mj.rate > 0) {
+    var hrs = amount / (mj.rate / 8);
+    lines.push('⏱️ To je oko <b>' + (hrs < 1 ? Math.max(1, Math.round(hrs * 60)) + ' minuta' : String(Math.round(hrs * 2) / 2).replace('.', ',') + ' h') + '</b> tvog rada.');
+  }
+  var ts = 0, tc = 0;
+  for (var i = 0; i < 30; i++) { var rc = recAt(addDaysStr(todayStr(), -i)); if (isWork(rc)) { ts += tipDay(rc); tc++; } }
+  if (tc && ts > 0) lines.push('💰 To je <b>' + String(Math.round(amount / (ts / tc) * 10) / 10).replace('.', ',') + '</b> prosečnih dnevnih bakšiša.');
+  if (ti.target) lines.push('🎯 To je <b>' + Math.round(amount / ti.target * 100) + '%</b> tvog dnevnog cilja.');
+  var nx = allocTargets().filter(function(x){ return x.type === 'e'; })[0];
+  if (nx) lines.push('🏠 Za „' + esc(nx.name) + '“ ti fali još ' + rsd(nx.need) + ' — ovo bi pokrilo <b>' + Math.min(100, Math.round(amount / nx.need * 100)) + '%</b>.');
+  var aj = activeJar();
+  if (aj) { var pj = jarPlan(aj); lines.push('🫙 Kasica „' + esc(aj.name) + '“ bi bila na <b>' + Math.floor(Math.min(100, (pj.saved + amount) / aj.target * 100)) + '%</b> umesto ' + Math.floor(pj.pct) + '%.'); }
+  var tips = {
+    kocka: 'Kad bi isti iznos odvajao svake nedelje, za godinu bi imao <b>' + rsd(amount * 52) + '</b> — sigurno, bez tiketa.',
+    cig: 'Ako ovo kupuješ svaki dan, mesečno je to oko <b>' + rsd(amount * 30) + '</b>. Pola od toga u kasicu = brzo do cilja.',
+    izlaz: 'Sledeći put odvoji isti iznos u kasicu za nešto što ostaje — patike, slušalice ili kurs.',
+    hrana: 'Za isti novac u marketu kupiš namirnice za više obroka — skuvaj i ponesi na posao.',
+    igre: 'Stavi to na listu želja i sačekaj popust ili rođendan — kasica će ti biti zahvalna.',
+    sitno: 'Sitni troškovi se sabiraju — probaj nedelju dana bez njih i taj novac ubaci u kasicu.'
+  };
+  return { lines: lines, emoji: hit ? hit.e : '🤔', tip: hit ? tips[hit.c] : 'Danas si već u minusu. Pravilo 24 sata: pre sledeće ovakve kupovine sačekaj dan — ako i dalje želiš, kupi bez griže savesti.' };
+}
+function openInsight(info, amount, spendRef){
+  sheet = { mode: 'insight', amount: amount, ref: spendRef };
+  $('#sheetBody').innerHTML = '<div class="ins-emoji">' + info.emoji + '</div><p class="ins-h">Za ' + rsd(amount) + ' si mogao…</p>' +
+    '<div class="ins-list">' + info.lines.map(function(l, i){ return '<div style="animation-delay:' + (i * 90) + 'ms">' + l + '</div>'; }).join('') + '</div>' +
+    '<div class="ins-tip">💡 ' + info.tip + '</div>';
+  var aj = activeJar();
+  $('#sheetFoot').innerHTML = (aj ? '<button type="button" class="btn primary block" data-act="ins-save">Odvoji isto toliko u kasicu (' + rsd(amount) + ')</button>' : '') +
+    '<div class="foot-row two"><button type="button" class="btn" data-act="close">Razumem</button><button type="button" class="btn ghost danger" data-act="ins-undo">Obriši potrošnju</button></div>';
+  openSheet('Šta sam mogao sa tim parama?');
+  sfx('out');
+}
 /* ---------- Troškovi ---------- */
 function moneyInput(attrs, value, placeholder, cls){
   return '<div class="money' + (cls ? ' ' + cls : '') + '"><input class="inp amt-in" ' + attrs + ' inputmode="numeric" autocomplete="off" enterkeyhint="done" placeholder="' + (placeholder || '0') + '" value="' + (value ? fmt(value) : '') + '"><span>RSD</span></div>';
@@ -1756,14 +1981,15 @@ function renderExpenses(){
     h += '<div class="elist">' + md.expenses.map(function(e){
       var s = dueState(e, st);
       var badge = e.paid ? '<span class="badge green">plaćeno</span>' : s === 'late' ? '<span class="badge red">kasni</span>' : s === 'soon' ? '<span class="badge amber">uskoro rok</span>' : '';
-      var meta = (e.due ? 'rok ' + e.due + '.' : 'bez roka') + (e.debtId ? ' · rata' : '');
+      var meta = (e.due ? 'rok ' + e.due + '.' : 'bez roka') + (e.debtId ? ' · rata' : '') + (e.saved && !e.paid ? ' · skupljeno ' + fmt(Math.min(e.saved, e.amount)) + ' od ' + fmt(e.amount) : '');
+      var envb = e.saved && !e.paid && e.amount ? '<span class="env"><i style="width:' + Math.min(100, e.saved / e.amount * 100).toFixed(1) + '%"></i></span>' : '';
       return '<div class="erow' + (e.paid ? ' paid' : '') + (s === 'late' ? ' late' : '') + '">' +
         '<button type="button" class="chk' + (e.paid ? ' on' : '') + '" data-act="exp-paid" data-id="' + esc(e.id) + '" aria-pressed="' + e.paid + '" aria-label="Plaćeno: ' + esc(e.name || 'Trošak') + '"><i>' + ic('check') + '</i></button>' +
-        '<button type="button" class="emain" data-act="exp-edit" data-id="' + esc(e.id) + '"><span class="en"><b>' + esc(e.name || 'Trošak') + '</b><small>' + meta + ' ' + badge + '</small></span>' +
+        '<button type="button" class="emain" data-act="exp-edit" data-id="' + esc(e.id) + '"><span class="en"><b>' + esc(e.name || 'Trošak') + '</b><small>' + meta + ' ' + badge + '</small>' + envb + '</span>' +
         '<span class="ea num">' + fmt(e.amount) + '</span></button></div>';
     }).join('') + '</div>';
   } else h += '<p class="empty">Još nema troškova. Dodaj kiriju, račune, hranu…</p>';
-  h += '<p class="hint">Dodirni krug kad platiš, a trošak da ga izmeniš. Rok je dan u mesecu do kog se plaća. Cilj i troškovi se prenose u naredni mesec kao početna vrednost (neplaćeni).</p>';
+  h += '<p class="hint">Novac za račune skupljaš preko „Raspodeli“ u novčaniku (Kasice). Dodirni krug kad platiš, a trošak da ga izmeniš. Rok je dan u mesecu do kog se plaća. Cilj i troškovi se prenose u naredni mesec kao početna vrednost (neplaćeni).</p>';
   setHTML($('#expCard'), h);
 }
 function renderDebts(){
@@ -1931,6 +2157,9 @@ function renderSettings(){
     '<p class="hint">★ = glavni posao: njegova dnevnica se koristi u računici dok još nema upisanih radnih dana i unapred je izabrana kad upisuješ dan. Promena dnevnice ne menja već upisane dane.</p></section>';
   h += '<div class="sec-t">Zvuk</div><section class="card"><div class="set-row"><div><div class="t">Zvukovi</div><div class="d">Kasa za zaradu i kasicu, „whoosh“ za potrošnju. Na iPhone-u se ne čuju kad je uključen tihi režim.</div></div>' +
     '<button type="button" class="switch' + (state.settings.sound ? ' on' : '') + '" data-act="sound" aria-pressed="' + state.settings.sound + '" aria-label="Zvukovi"></button></div></section>';
+  h += '<div class="sec-t">Pametni saveti</div><section class="card"><div class="set-row"><div><div class="t">Šta sam mogao sa tim parama</div>' +
+    '<div class="d">Posle impulsne kupovine (kladionica, cigarete, izlasci, dostava…) ili kad si u minusu, pokaže šta si mogao umesto toga.</div></div>' +
+    '<button type="button" class="switch' + (ui.smart !== false ? ' on' : '') + '" data-act="smart" aria-pressed="' + (ui.smart !== false) + '" aria-label="Pametni saveti"></button></div></section>';
   h += '<div class="sec-t">Predlog štednje iz bakšiša</div><section class="card"><div class="set-row" style="display:block"><div class="t">Deo bakšiša za predlog</div><div class="d" style="margin-bottom:12px">Koristi se kad kasica nema rok.</div>' +
     '<div class="seg" style="margin:0">' + [10, 20, 30, 50].map(function(v){
       return '<button type="button" data-act="share" data-v="' + v + '" class="' + (state.settings.tipShare === v ? 'on' : '') + '">' + v + '%</button>';
@@ -2176,6 +2405,7 @@ function saveDay(){
   if (!entries.length) return;
   var oldTip = tipDay(md.days[d]), tBefore = (key === curKey && d === T.d) ? todayInfo() : null;
   setStatus(md, d, { entries: entries });
+  syncTipTx(key, d);
   var after = computeStats(md, key), rec = md.days[d];
   save(); closeSheet(); renderAll(); popDay(key, d);
   sfx('cash'); burst(tab === 'home' ? $('#hero .hero-num') : null);
@@ -2197,21 +2427,27 @@ function addSpend(){
   var md = ensureMonth(sheet.key), d = sheet.d;
   var r = md.days[d] || (md.days[d] = {});
   r.spend = r.spend || [];
-  r.spend.push({ id: uid(), amount: amount, note: (n && n.value || '').trim() });
+  var spi = { id: uid(), amount: amount, note: (n && n.value || '').trim() }, pk0 = parseKey(sheet.key);
+  r.spend.push(spi);
+  walletSpend(spi, ds(pk0.y, pk0.m, d), 'cash');
   save(); sfx('whoosh');
   renderDaySheet(); renderAll();
   focusNow($('#spendAmt'));
   toast('Potrošnja: ' + rsd(amount));
 }
-function addTodaySpend(amount, note){
+function addTodaySpend(amount, note, acc){
   var key = curKey, d = T.d, md = ensureMonth(key);
   var r = md.days[d] || (md.days[d] = {});
   r.spend = r.spend || [];
   var item = { id: uid(), amount: amount, note: note || '' };
   r.spend.push(item);
+  walletSpend(item, todayStr(), acc);
   save(); sfx('whoosh'); renderAll(); popDay(key, d);
+  var ins = spendInsight(amount, note);
+  if (ins) setTimeout(function(){ if (!sheet) openInsight(ins, amount, { key: key, d: d, id: item.id }); }, 650);
   toast('Potrošnja: ' + rsd(amount) + ' · danas ukupno ' + rsd(spendDay(r)), 'Vrati', function(){
     var m2 = ensureMonth(key), r2 = m2.days[d];
+    state.wallet = state.wallet.filter(function(t){ return t.ref !== 'sp:' + item.id; });
     if (r2 && r2.spend) {
       r2.spend = r2.spend.filter(function(x){ return x.id !== item.id; });
       if (!r2.spend.length) delete r2.spend;
@@ -2264,8 +2500,9 @@ function renderAmountSheet(v, note){
   $('#sheetFoot').innerHTML = '<button type="button" class="btn primary block" data-act="amt-ok">' + (val(o.ok, o) || 'Sačuvaj') + '</button>';
 }
 function openSpendQuick(back){
-  openAmount({ title: 'Potrošio sam', label: 'Koliko si potrošio danas', presets: [200, 500, 1000, 2000], note: true, noteLbl: 'Na šta (opciono)', notePh: 'npr. hrana, prevoz',
-    ok: 'Dodaj potrošnju', back: back, onOk: function(a, n){ addTodaySpend(a, n); } });
+  openAmount({ title: 'Potrošio sam', label: 'Koliko si potrošio danas', acc: 'cash', presets: [200, 500, 1000, 2000], note: true, noteLbl: 'Na šta?', notePh: 'npr. hrana, prevoz, cigarete',
+    top: function(o){ return accSeg('acc-set', o.acc, 'Iz keša', 'Karticom'); },
+    ok: 'Dodaj potrošnju', back: back, onOk: function(a, n, o){ addTodaySpend(a, n, o.acc); } });
 }
 function openJarQuick(back){
   var avail = state.jars.filter(function(j){ return !jarLocked(j) && !jarPlan(j).done; });
@@ -2295,11 +2532,14 @@ function openWalletQuick(back){
     ok: function(o){ return o.dir > 0 ? 'Ubaci' : 'Izvadi'; },
     onOk: function(a, n, o){ walletTx(o.dir > 0 ? a : -a, n); } });
 }
-function walletTx(a, n){
-  state.wallet.push({ id: uid(), date: todayStr(), amount: a, note: n });
-  save(); renderWallet(); afterRender();
+function walletTx(a, n, acc){
+  var t = { id: uid(), date: todayStr(), amount: a, note: n };
+  if (acc === 'bank') t.acc = 'bank';
+  state.wallet.push(t);
+  save(); renderWallet(); renderHome(); afterRender();
   sfx(a > 0 ? 'cash' : 'out');
-  toast('Novčanik ' + (a > 0 ? '+' : '−') + rsd(Math.abs(a)));
+  if (a > 0) burst($('#walletCard .wal-num'));
+  toast((acc === 'bank' ? 'Račun ' : 'Keš ') + (a > 0 ? '+' : '−') + rsd(Math.abs(a)));
 }
 
 /* ---------- Kasica, dug, trošak ---------- */
@@ -2395,10 +2635,11 @@ function tipInfoHtml(t){
 }
 
 /* ================== Akcije sa novcem ================== */
-function deposit(jarId, amount, note){
+function deposit(jarId, amount, note, noWallet){
   var j = jarById(jarId); if (!j) return;
   var before = jarPlan(j).pct;
   state.jarTx.push({ id: uid(), jarId: jarId, date: todayStr(), amount: amount, note: note || '' });
+  if (!noWallet) state.wallet.push({ id: uid(), date: todayStr(), amount: -amount, note: 'U kasicu „' + j.name + '“', kind: 'jar' });
   coinHold['jar-' + j.id] = true;
   save(); renderAll();
   sfx('cash');
@@ -2415,6 +2656,7 @@ function withdraw(jarId, amount, note){
   if (!amount) return;
   var before = jarPlan(j).pct;
   state.jarTx.push({ id: uid(), jarId: jarId, date: todayStr(), amount: -amount, note: note || '' });
+  state.wallet.push({ id: uid(), date: todayStr(), amount: amount, note: 'Iz kasice „' + j.name + '“', kind: 'jar' });
   coinHold['jar-' + j.id] = true;
   save(); renderAll(); sfx('out');
   coinFx(j, before, jarPlan(j).pct, -1, amount);
@@ -2472,7 +2714,9 @@ document.addEventListener('input', function(e){
     md = ensureMonth(viewKey);
     var a = parseAmt(t.value);
     if (a) md.payouts[id] = a; else delete md.payouts[id];
-    save();
+    var stp = computeStats(md, viewKey);
+    syncPayTx(viewKey, id, a, stp.jobs[id] ? stp.jobs[id].name : '');
+    save(); renderWallet();
     var st = computeStats(md, viewKey), el = document.getElementById('pst-' + id);
     if (el && st.jobs[id]) el.innerHTML = payStatus(st.jobs[id].wages, a);
     renderHome(); afterRender();
@@ -2484,6 +2728,11 @@ document.addEventListener('input', function(e){
     var dt2 = $('#dayTotal'); if (dt2) dt2.textContent = rsd(sheetTotal());
   } else if (t.id === 'fDue') {
     t.value = t.value.replace(/\D/g, '').slice(0, 2);
+  } else if (sheet && sheet.mode === 'alloc' && t.id === 'alTotal') {
+    sheet.total = parseAmt(t.value);
+    if (!sheet.manual) { sheet.vals = allocSuggest(sheet.total, sheet.rows); allocFill(); } else updAllocSum();
+  } else if (sheet && sheet.mode === 'alloc' && (id = t.getAttribute('data-al'))) {
+    sheet.vals[id] = parseAmt(t.value); sheet.manual = true; updAllocSum();
   }
 });
 
@@ -2614,19 +2863,22 @@ document.addEventListener('click', function(e){
       md = ensureMonth(sheet.key); d = sheet.d;
       var mk = sheet.key;
       setStatus(md, d, { off: true });
+      syncTipTx(mk, d);
       save(); closeSheet(); renderAll(); popDay(mk, d); toast(d + '. ' + MONTHS[parseKey(mk).m] + ' — slobodan dan');
       break;
     case 'clear-day':
       md = ensureMonth(sheet.key); d = sheet.d;
       var prev = md.days[d] ? JSON.parse(JSON.stringify(md.days[d])) : null, ck = sheet.key;
       setStatus(md, d, null);
+      syncTipTx(ck, d);
       save(); closeSheet(); renderAll();
-      toast('Unos obrisan', 'Vrati', function(){ if (prev) ensureMonth(ck).days[d] = prev; save(); renderAll(); });
+      toast('Unos obrisan', 'Vrati', function(){ if (prev) ensureMonth(ck).days[d] = prev; syncTipTx(ck, d); save(); renderAll(); });
       break;
     case 'spend-add': addSpend(); break;
     case 'spend-del':
       md = ensureMonth(sheet.key); d = sheet.d;
       var r = md.days[d];
+      state.wallet = state.wallet.filter(function(t){ return t.ref !== 'sp:' + id; });
       if (r && r.spend) { r.spend = r.spend.filter(function(x){ return x.id !== id; }); if (!r.spend.length) delete r.spend; if (!hasStatus(r) && !r.spend) delete md.days[d]; }
       save(); renderDaySheet(); renderAll();
       break;
@@ -2695,13 +2947,65 @@ document.addEventListener('click', function(e){
 
     /* novčanik */
     case 'wal-in':
-      openAmount({ title: 'Ubaci u novčanik', label: 'Koliko ubacuješ', note: true, notePh: 'npr. bakšiš, podigao sa računa', presets: [500, 1000, 2000, 5000], ok: 'Ubaci',
-        onOk: function(a, n){ walletTx(a, n); } });
+      openAmount({ title: 'Ubaci novac', label: 'Koliko ubacuješ', acc: 'cash', note: true, notePh: 'npr. pozajmica vraćena, prodao nešto', presets: [500, 1000, 2000, 5000], ok: 'Ubaci',
+        top: function(o){ return accSeg('acc-set', o.acc, 'U keš', 'Na račun'); },
+        onOk: function(a, n, o){ walletTx(a, n || 'Ubačeno', o.acc); } });
       break;
-    case 'wal-out':
-      openAmount({ title: 'Izvadi iz novčanika', label: 'Koliko vadiš', note: true, notePh: 'npr. uplatio na račun', ok: 'Izvadi',
-        onOk: function(a, n){ walletTx(-a, n); } });
+    case 'wal-out': openSpendQuick(false); break;
+    case 'wal-alloc': openAlloc(); break;
+    case 'wal-move':
+      openAmount({ title: 'Prebaci novac', dir: 'c2b', label: 'Koliko prebacuješ', presets: [1000, 2000, 5000, 10000], ok: 'Prebaci',
+        top: function(o){ return '<div class="seg"><button type="button" data-act="mv-dir" data-v="c2b" class="' + (o.dir === 'c2b' ? 'on' : '') + '">Keš → Račun</button><button type="button" data-act="mv-dir" data-v="b2c" class="' + (o.dir === 'b2c' ? 'on' : '') + '">Račun → Keš</button></div>'; },
+        onOk: function(a, n, o){
+          var toBank = o.dir === 'c2b', t1 = { id: uid(), date: todayStr(), amount: -a, note: toBank ? 'Uplatio na račun' : 'Podigao sa računa', kind: 'mv' }, t2 = { id: uid(), date: todayStr(), amount: a, note: toBank ? 'Uplata sa keša' : 'Podignuto u keš', kind: 'mv' };
+          if (toBank) t2.acc = 'bank'; else t1.acc = 'bank';
+          state.wallet.push(t1, t2); save(); renderWallet(); renderHome(); afterRender(); sfx('out');
+          toast((toBank ? 'Keš → Račun ' : 'Račun → Keš ') + rsd(a));
+        } });
       break;
+    case 'acc-set': case 'mv-dir':
+      if (sheet && sheet.mode === 'amount') {
+        if (act === 'acc-set') sheet.o.acc = b.getAttribute('data-v'); else sheet.o.dir = b.getAttribute('data-v');
+        renderAmountSheet(parseAmt($('#amtInput').value), $('#amtNote') ? $('#amtNote').value : '');
+      }
+      break;
+    case 'al-acc': if (sheet && sheet.mode === 'alloc') { sheet.acc = b.getAttribute('data-v'); renderAllocSheet(); } break;
+    case 'al-all':
+      if (sheet && sheet.mode === 'alloc') {
+        sheet.total = +b.getAttribute('data-v'); $('#alTotal').value = fmt(sheet.total);
+        if (!sheet.manual) { sheet.vals = allocSuggest(sheet.total, sheet.rows); allocFill(); } else updAllocSum();
+      }
+      break;
+    case 'al-suggest':
+      if (sheet && sheet.mode === 'alloc') {
+        if (!sheet.total) { toast('Prvo upiši koliko odvajaš.'); focusNow($('#alTotal')); return; }
+        sheet.manual = false; sheet.vals = allocSuggest(sheet.total, sheet.rows); allocFill();
+      }
+      break;
+    case 'al-ok': if (sheet && sheet.mode === 'alloc') doAlloc(); break;
+    case 'info-wallet':
+      openInfo('Kako radi novčanik', '<div class="sug-lines" style="font-size:15px">' +
+        '<p><b>U novčaniku (keš)</b> — koliko para imaš kod sebe. Bakšiš ulazi sam kad sačuvaš dan, a potrošnja „iz keša“ izlazi sama.</p>' +
+        '<p><b>Na računu</b> — plata ulazi sama kad u Kalendaru upišeš „Leglo na račun“, a potrošnja „karticom“ izlazi sa računa.</p>' +
+        '<p><b>Raspodeli</b> — odvojiš deo para za kiriju i račune (koverta se puni), ratu kredita (dug se odmah smanjuje) ili kasicu. Taj novac izlazi iz novčanika.</p>' +
+        '<p><b>Slobodno za trošenje</b> = keš + račun − koliko još fali za neplaćene račune i rate ovog meseca (' + rsd(needLeft()) + ').</p>' +
+        '<p>Automatika važi od ' + fmtDate(state.walletFrom || todayStr(), true) + '; ranije upisani dani ne menjaju novčanik. Na početku jednom ubaci koliko stvarno imaš.</p></div>');
+      break;
+    case 'ins-save':
+      var aj2 = activeJar(), amt2 = sheet ? sheet.amount : 0;
+      closeSheet();
+      if (aj2 && amt2) deposit(aj2.id, Math.min(amt2, jarPlan(aj2).need), 'Umesto impulsne kupovine');
+      break;
+    case 'ins-undo':
+      var rf = sheet && sheet.ref; closeSheet();
+      if (rf) {
+        var mu = ensureMonth(rf.key), ru = mu.days[rf.d];
+        state.wallet = state.wallet.filter(function(t){ return t.ref !== 'sp:' + rf.id; });
+        if (ru && ru.spend) { ru.spend = ru.spend.filter(function(x){ return x.id !== rf.id; }); if (!ru.spend.length) delete ru.spend; if (!hasStatus(ru) && !ru.spend) delete mu.days[rf.d]; }
+        save(); renderAll(); toast('Potrošnja obrisana.');
+      }
+      break;
+    case 'smart': ui.smart = ui.smart === false; saveUi(); renderSettings(); break;
     case 'wal-del':
       i = state.wallet.map(function(x){ return x.id; }).indexOf(id);
       if (i >= 0) { var wt = state.wallet.splice(i, 1)[0]; save(); renderWallet(); afterRender();
@@ -2758,7 +3062,7 @@ document.addEventListener('click', function(e){
         var ref = viewKey + ':' + ex.id;
         if (ex.debtId && state.debts.some(function(x){ return x.id === ex.debtId; })) {
           state.debtTx = state.debtTx.filter(function(x){ return x.ref !== ref; });
-          if (ex.paid) state.debtTx.push({ id: uid(), debtId: ex.debtId, date: todayStr(), amount: ex.amount, ref: ref });
+          if (ex.paid && ex.amount - (ex.saved || 0) > 0) state.debtTx.push({ id: uid(), debtId: ex.debtId, date: todayStr(), amount: ex.amount - (ex.saved || 0), ref: ref });
         }
         save(); renderAll();
         if (ex.paid) {
@@ -2921,7 +3225,7 @@ function hasLocalData(){
 }
 function applyRemote(data){
   applyingRemote = true;
-  try { state = normalize(data); virt = {}; ensureMonth(curKey); save(); }
+  try { state = normalize(data); virt = {}; ensureMonth(curKey); ensureWalletFrom(); save(); }
   finally { applyingRemote = false; }
   renderAll();
 }
@@ -3073,7 +3377,7 @@ function importFile(file){
       text: 'Vraćanje kopije <b>zamenjuje sve trenutne podatke</b> na ovom uređaju. Nastaviti?',
       onOk: function(){
         state = normalize(data); virt = {};
-        ensureMonth(curKey); save(); viewKey = curKey; closeSheet(); renderAll();
+        ensureMonth(curKey); ensureWalletFrom(); save(); viewKey = curKey; closeSheet(); renderAll();
         toast('Podaci su vraćeni iz kopije.');
       } });
   };
