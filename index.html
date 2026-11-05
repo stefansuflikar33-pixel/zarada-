@@ -1254,6 +1254,200 @@ svg .f{fill:none}
 @media (prefers-reduced-motion: reduce){
   .bar>i::after,.btn.primary::after,.bk-face svg,.bk-face .eyes{animation:none!important}
 }
+
+/* ================= DIZAJN v3 — po uzoru na video: vrh + list, pilula, opruga ================= */
+:root{
+  --spring:cubic-bezier(.3,1.32,.5,1); --spring-d:.44s;
+  --top:#eceef1; --pane:#ffffff; --pcard:#f2f4f5; --pcard2:#ffffff; --pill:#111413; --pill-ink:rgba(255,255,255,.6);
+  --c-green:#34d870; --c-green-ink:#04220f; --c-mint:#2ee6b6; --c-mint-ink:#03251c; --c-blue:#1ea0f2; --c-blue-ink:#04263a;
+  --c-yellow:#ffd60a; --c-yellow-ink:#2b2300; --c-red:#ff5a5f; --c-red-ink:#2b0507;
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){ --top:#050606; --pane:#121514; --pcard:#1c201f; --pcard2:#252a29; --pill:#1f2423; } }
+:root[data-theme="dark"]{ --top:#050606; --pane:#121514; --pcard:#1c201f; --pcard2:#252a29; --pill:#1f2423; }
+html,body{background:var(--top)}
+body{background:var(--top)}
+
+/* Vrh i list */
+.view{padding-bottom:0}
+.pane{position:relative;margin:8px -16px 0;padding:18px 16px calc(132px + env(safe-area-inset-bottom));min-height:62vh;
+  background:var(--pane);border-radius:30px 30px 0 0;box-shadow:0 -1px 0 var(--line);
+  --card:var(--pcard); --card2:var(--pcard2); --sh1:none;}
+.pane::before{content:"";position:absolute;left:50%;top:8px;width:36px;height:4px;margin-left:-18px;border-radius:99px;background:var(--line2)}
+.view.in-r .pane,.view.in-l .pane{animation:paneUp .5s var(--spring) both}
+@keyframes paneUp{from{transform:translateY(26px)}to{transform:none}}
+
+/* Pilula meni (5 ikonica) sa belom kapsulom koja klizi */
+.tabbar{left:50%;right:auto;bottom:calc(12px + env(safe-area-inset-bottom));transform:translateX(-50%);width:min(340px,calc(100% - 32px));
+  padding:6px;border:0;border-radius:999px;background:var(--pill);-webkit-backdrop-filter:none;backdrop-filter:none;
+  box-shadow:0 14px 34px rgba(0,0,0,.28),0 0 0 1px rgba(255,255,255,.06);grid-template-columns:repeat(5,1fr);transition:transform .45s var(--spring),opacity .3s}
+.tab{position:relative;z-index:1;font-size:0;min-height:50px;border-radius:999px;color:var(--pill-ink);gap:0;transition:color .3s}
+.tab svg{width:24px;height:24px}
+.tab.on{color:#111413}
+.tab-ind{position:absolute;z-index:0;top:6px;left:6px;height:50px;width:calc((100% - 12px) / 5);border-radius:999px;background:#fff;
+  box-shadow:0 4px 12px rgba(0,0,0,.18);transition:transform .48s var(--spring)}
+.tab.wtab{justify-content:center;padding:0}
+.tab.wtab .wt-orb{width:auto;height:auto;margin:0;background:none!important;box-shadow:none!important;color:inherit}
+.tab.wtab svg{width:24px;height:24px}
+.tab.wtab svg .f{fill:currentColor;fill-opacity:.18}
+.tab.wtab .wt-lbl{display:none}
+.tab.wtab.on .wt-orb{box-shadow:none}
+.wt-badge{top:-4px;right:-8px}
+html.sheet-on .tabbar{transform:translate(-50%,160%);opacity:0}
+
+/* Klizanje cele strane */
+.view.in-r{animation:pageInR var(--spring-d) var(--spring) both}
+.view.in-l{animation:pageInL var(--spring-d) var(--spring) both}
+@keyframes pageInR{from{transform:translate3d(100%,0,0)}to{transform:none}}
+@keyframes pageInL{from{transform:translate3d(-100%,0,0)}to{transform:none}}
+.view.leaving{position:fixed;z-index:0;margin:0 auto;pointer-events:none;overflow:hidden}
+.view.leaving.out-l{animation:pageOutL var(--spring-d) var(--spring) forwards}
+.view.leaving.out-r{animation:pageOutR var(--spring-d) var(--spring) forwards}
+@keyframes pageOutL{to{transform:translate3d(-38%,0,0);opacity:.35}}
+@keyframes pageOutR{to{transform:translate3d(38%,0,0);opacity:.35}}
+#app{position:relative;overflow-x:clip}
+
+/* Prozor odozdo: pozadina se zatamni i „odmakne“ */
+#app{transition:transform .45s var(--spring),filter .45s,border-radius .45s;transform-origin:50% var(--oy,40vh)}
+html.sheet-on #app{transform:scale(.94);filter:brightness(.82);border-radius:26px}
+html.sheet-on body{background:#000}
+.sheet{transition:transform .5s var(--spring)}
+
+/* Kartice: jarke ravne boje iz videa, tamni tekst (kontrast ≥ 5,5:1) */
+.wc{background:var(--a);color:var(--fg,#04220f);box-shadow:0 12px 26px var(--sh,rgba(0,0,0,.2))}
+.wc::before{background:radial-gradient(circle,rgba(255,255,255,.45),rgba(255,255,255,0) 70%)}
+.wc-month{--a:var(--c-green);--fg:var(--c-green-ink);--sh:rgba(52,216,112,.32)}
+.wc-wallet{--a:var(--c-mint);--fg:var(--c-mint-ink);--sh:rgba(46,230,182,.3)}
+.wc-today{--a:var(--c-blue);--fg:var(--c-blue-ink);--sh:rgba(30,160,242,.3)}
+.wc-today.st-green{--a:var(--c-green);--fg:var(--c-green-ink)}
+.wc-today.st-amber{--a:var(--c-yellow);--fg:var(--c-yellow-ink)}
+.wc-today.st-red,.wc-wallet.minus,.wc-month.minus,.wc-due.late{--a:var(--c-red);--fg:var(--c-red-ink);--sh:rgba(255,90,95,.3)}
+.wc-due{--a:var(--c-yellow);--fg:var(--c-yellow-ink);--sh:rgba(255,214,10,.3)}
+.wc-due.soon{--a:#ffb020;--fg:#2b1a00}
+.wc-ic{background:rgba(0,0,0,.1)}
+.wc-ic svg .f{fill:currentColor;fill-opacity:.2}
+.wc .bar{background:rgba(0,0,0,.12)}
+.wc .bar>i{background:var(--fg)}
+.wc-mini{background:rgba(255,255,255,.4)}
+.wc-btn{background:rgba(0,0,0,.09);color:var(--fg)}
+.wc-btn.main{background:#111413;color:#fff;box-shadow:0 6px 14px rgba(0,0,0,.18)}
+.wc-row .obi{background:rgba(0,0,0,.1)!important;color:var(--fg)!important}
+.wc-pend{background:rgba(255,255,255,.42)}
+.wc-big b{letter-spacing:-.04em}
+.dec{font-size:.5em;font-weight:700;opacity:.55;letter-spacing:-.01em;margin-left:1px}
+
+/* Tastatura sa + − × ÷ */
+#kp{position:fixed;left:0;right:0;bottom:0;z-index:76;background:var(--card);border-radius:24px 24px 0 0;box-shadow:0 -10px 34px rgba(0,0,0,.22);
+  padding:10px 12px calc(10px + env(safe-area-inset-bottom));transform:translate3d(0,105%,0);transition:transform .42s var(--spring);max-width:560px;margin:0 auto}
+#kp.on{transform:none}
+.kp-disp{display:flex;justify-content:space-between;align-items:baseline;gap:10px;min-height:28px;padding:0 6px 8px;font-variant-numeric:tabular-nums}
+.kp-disp span{font-size:15px;color:var(--muted);font-weight:650;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
+.kp-disp b{font-size:20px;font-weight:800;white-space:nowrap}
+.kp-disp b.pop{animation:bump .45s var(--spring)}
+.kp-g{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:7px}
+.kp-g button{min-height:50px;border:0;border-radius:15px;background:var(--soft);color:var(--text);font-size:22px;font-weight:650;font-variant-numeric:tabular-nums;
+  transition:transform .3s var(--spring),background .2s}
+.kp-g button:active,.kp-g button.is-pressed{transform:scale(.9);transition-duration:.06s}
+.kp-g .op{background:transparent;color:var(--muted);font-size:24px}
+.kp-g .op.on{background:var(--acc-soft);color:var(--acc-text)}
+.kp-g .eq{background:var(--soft);color:var(--acc-text);font-weight:800}
+.kp-g .ok{background:#111413;color:#fff;font-size:17px;font-weight:750}
+html.kp-on .sheet-body{padding-bottom:var(--kph,330px)}
+html.kp-on .page-body{padding-bottom:var(--kph,330px)}
+html.kp-on .tabbar{transform:translate(-50%,160%);opacity:0}
+
+/* Prevlaka u Novčaniku: desno ulaz (zeleno), levo izlaz (crveno) */
+.swipe{position:relative;height:66px;border-radius:999px;background:var(--soft);margin:16px 0 8px;overflow:hidden;touch-action:none;user-select:none;-webkit-user-select:none}
+.swipe::before,.swipe::after{content:"";position:absolute;top:0;bottom:0;width:50%;opacity:var(--o,0);transition:opacity .2s}
+.swipe::before{left:0;background:linear-gradient(90deg,var(--c-red),rgba(255,90,95,.15))}
+.swipe::after{right:0;background:linear-gradient(270deg,var(--c-green),rgba(52,216,112,.15))}
+.swipe.l::before{opacity:var(--o,0)}.swipe.l::after{opacity:0}
+.swipe.r::after{opacity:var(--o,0)}.swipe.r::before{opacity:0}
+.sw-l,.sw-r{position:absolute;z-index:1;top:50%;transform:translateY(-50%);font-size:14px;font-weight:750;color:var(--muted)}
+.sw-l{left:20px}.sw-r{right:20px}
+.sw-knob{position:absolute;z-index:2;left:50%;top:7px;width:52px;height:52px;margin-left:-26px;border-radius:50%;background:#111413;color:#fff;
+  display:grid;place-items:center;font-size:20px;box-shadow:0 6px 16px rgba(0,0,0,.25);transition:transform .45s var(--spring),background .2s;cursor:grab}
+.swipe.drag .sw-knob{transition:background .2s;cursor:grabbing}
+.swipe.l .sw-knob{background:#b4232a}.swipe.r .sw-knob{background:#15803d}
+.sw-hint{text-align:center;font-size:13px;color:var(--muted);margin:0 0 6px}
+.sw-alt{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.sw-alt .btn{min-height:44px;font-size:14.5px}
+
+/* Krug uspeha */
+#okfx{position:fixed;inset:0;z-index:95;pointer-events:none;overflow:hidden}
+#okfx .ring{position:absolute;left:var(--x);top:var(--y);width:40px;height:40px;margin:-20px 0 0 -20px;border-radius:50%;background:var(--c);
+  transform:scale(0);animation:okGrow .55s cubic-bezier(.3,.9,.4,1) forwards}
+@keyframes okGrow{to{transform:scale(var(--s))}}
+#okfx .ok-c{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;color:var(--ink);text-align:center;padding:24px;
+  opacity:0;animation:okText .4s .28s var(--spring) forwards}
+@keyframes okText{from{opacity:0;transform:translateY(14px) scale(.9)}to{opacity:1;transform:none}}
+#okfx .ok-c svg{width:58px;height:58px;stroke-width:3}
+#okfx .ok-c b{font-size:38px;font-weight:850;letter-spacing:-.03em}
+#okfx .ok-c span{font-size:16px;font-weight:650;opacity:.85}
+#okfx.bye{animation:okBye .35s ease-in forwards}
+@keyframes okBye{to{opacity:0}}
+
+/* Mac: kolone su sada u listu */
+@media (min-width:960px){
+  .view{column-count:auto}
+  .pane{column-count:2;column-gap:22px;margin:8px 0 0;border-radius:30px;padding:22px 22px calc(120px + env(safe-area-inset-bottom))}
+  .pane>*{break-inside:avoid}
+  .pane::before{display:none}
+  #kp{border-radius:24px;bottom:16px}
+}
+@media (prefers-reduced-motion: reduce){
+  .view.leaving{display:none}
+  html.sheet-on #app{transform:none}
+}
+
+@media (min-width:960px){.sheet::after{display:none}}
+
+/* ===== Glatki prelaz između menija (v3.1) =====
+   nova strana ide IZNAD stare i ima svoju pozadinu (ranije je stara prekrivala novu i providno se mešale),
+   bez odskoka cele strane, samo transform/opacity, bez paralelnih animacija unutra */
+.view.in-r,.view.in-l{position:relative;z-index:2;background:var(--top);min-height:100vh;will-change:transform;
+  box-shadow:-14px 0 34px rgba(0,0,0,.14)}
+.view.in-l{box-shadow:14px 0 34px rgba(0,0,0,.14)}
+.view.in-r{animation:pgInR .34s cubic-bezier(.2,.85,.25,1) both}
+.view.in-l{animation:pgInL .34s cubic-bezier(.2,.85,.25,1) both}
+@keyframes pgInR{from{transform:translate3d(100%,0,0)}to{transform:translate3d(0,0,0)}}
+@keyframes pgInL{from{transform:translate3d(-100%,0,0)}to{transform:translate3d(0,0,0)}}
+.view.in-r .pane,.view.in-l .pane{animation:none}
+.view.in-r .stag,.view.in-l .stag{animation:none}
+.view.leaving{z-index:1;will-change:transform,opacity;background:var(--top);contain:layout paint}
+.view.leaving.out-l{animation:pgOutL .34s cubic-bezier(.2,.85,.25,1) forwards}
+.view.leaving.out-r{animation:pgOutR .34s cubic-bezier(.2,.85,.25,1) forwards}
+@keyframes pgOutL{to{transform:translate3d(-28%,0,0);opacity:.4}}
+@keyframes pgOutR{to{transform:translate3d(28%,0,0);opacity:.4}}
+.view.leaving *,.view.leaving *::before,.view.leaving *::after{animation:none!important;transition:none!important}
+@media (min-width:960px){.view.in-r,.view.in-l{box-shadow:none}}
+.view.in-r *,.view.in-l *,.view.in-r *::before,.view.in-l *::before,.view.in-r *::after,.view.in-l *::after{animation-play-state:paused!important}
+
+/* ===== Prelaz v3.2: dve zamrznute slike veličine ekrana, samo transform/opacity ===== */
+.view.frz{position:fixed!important;z-index:1;overflow:hidden!important;margin:0!important;pointer-events:none;background:var(--top);
+  contain:strict;transform:translate3d(0,0,0);-webkit-backface-visibility:hidden;backface-visibility:hidden;will-change:transform;min-height:0!important;box-shadow:none}
+.view.frz.in-r,.view.frz.in-l{z-index:3}
+.view.frz.in-r{animation:fzInR .28s cubic-bezier(.2,.8,.2,1) both}
+.view.frz.in-l{animation:fzInL .28s cubic-bezier(.2,.8,.2,1) both}
+.view.frz.out-l{animation:fzOutL .18s cubic-bezier(.4,0,1,1) both}
+.view.frz.out-r{animation:fzOutR .18s cubic-bezier(.4,0,1,1) both}
+@keyframes fzInR{from{transform:translate3d(64px,0,0);opacity:0}to{transform:translate3d(0,0,0);opacity:1}}
+@keyframes fzInL{from{transform:translate3d(-64px,0,0);opacity:0}to{transform:translate3d(0,0,0);opacity:1}}
+@keyframes fzOutL{from{transform:translate3d(0,0,0);opacity:1}to{transform:translate3d(-40px,0,0);opacity:0}}
+@keyframes fzOutR{from{transform:translate3d(0,0,0);opacity:1}to{transform:translate3d(40px,0,0);opacity:0}}
+.view.frz *,.view.frz *::before,.view.frz *::after{animation-play-state:paused!important;transition:none!important}
+.view.frz .pane{animation:none!important}
+html.tabbing .topbar{-webkit-backdrop-filter:none;backdrop-filter:none;background:var(--top);transition:none}
+/* skupe večne animacije: bez pomeranja „left“ (to tera telefon da preračunava stranu u svakom frejmu) */
+.btn.primary:not(:disabled)::after{left:0;transform:translate3d(-150%,0,0);animation-name:btnSheen2;will-change:transform}
+@keyframes btnSheen2{0%,75%{transform:translate3d(-150%,0,0)}100%{transform:translate3d(330%,0,0)}}
+.wc::after{left:0;transform:translate3d(-120%,0,0)}
+.wstack.enter .wc::after{animation-name:shine2}
+.wc.lift::after{animation-name:sheen2}
+@keyframes shine2{0%{transform:translate3d(-120%,0,0);opacity:1}100%{transform:translate3d(200%,0,0);opacity:1}}
+@keyframes sheen2{0%{opacity:0;transform:translate3d(-120%,0,0)}20%{opacity:1}100%{opacity:0;transform:translate3d(200%,0,0)}}
+/* sjaj samo na glavnim trakama (ne na svakoj traci u grafikonima) */
+.bar>i::after{animation:none}
+.hero .bar>i::after,.wc .bar>i::after,#goalCard .bar>i::after{animation:barShine 2.6s 1s ease-in-out infinite}
 </style>
 </head>
 <body>
@@ -1391,6 +1585,7 @@ svg .f{fill:none}
   </div>
 </div>
 <div class="fx" id="fx" hidden></div>
+<div id="okfx" hidden aria-live="polite"></div>
 <div class="bk" id="banker" hidden role="dialog" aria-modal="true" aria-labelledby="bkHead">
   <div class="bk-bg" data-act="bk-close"></div>
   <div class="bk-wrap">
@@ -2343,7 +2538,7 @@ function runCounts(root){
     numPrev[key] = to;
     if (from === to || reduced()) {
       if (numAnim[key]) { cancelAnimationFrame(numAnim[key]); numAnim[key] = 0; }
-      el.textContent = cf(to);
+      if (isBigNum(el)) el.innerHTML = decHtml(to); else el.textContent = cf(to);
       continue;
     }
     countUp(el, key, from, to);
@@ -2359,7 +2554,7 @@ function countUp(el, key, from, to){
     if (!t0) t0 = now;
     var k = Math.min(1, (now - t0) / dur), e = 1 - Math.pow(1 - k, 4);
     el.textContent = cf(from + diff * e);
-    if (k < 1) numAnim[key] = requestAnimationFrame(step); else numAnim[key] = 0;
+    if (k < 1) numAnim[key] = requestAnimationFrame(step); else { numAnim[key] = 0; if (isBigNum(el)) el.innerHTML = decHtml(to); }
   }
   numAnim[key] = requestAnimationFrame(step);
 }
@@ -2481,6 +2676,7 @@ function stagger(v){
   var list = [];
   Array.prototype.forEach.call(v.children, function(c){
     if (c.tagName === 'HEADER' || c.hidden || c.classList.contains('msw') || c.id === 'wstack') return;
+    if (c.classList.contains('pane')) { Array.prototype.forEach.call(c.children, function(x){ if (x.hidden) return; if (x.id === 'summary' || x.id === 'jarsList') Array.prototype.forEach.call(x.children, function(y){ list.push(y); }); else list.push(x); }); return; }
     if (c.id === 'summary' || c.id === 'jarsList' || c.id === 'walletCard') Array.prototype.forEach.call(c.children, function(x){ list.push(x); });
     else list.push(c);
   });
@@ -2970,7 +3166,7 @@ function renderWallet(){
     (CS().dual ? '<div class="wal-sub num">≈ keš ' + other(cash) + '</div>' : '') +
     (envCash() > 0 ? '<div class="wal-env">✉️ U keš kovertama (kasice): <b class="num">' + rsd(envCash()) + '</b> — ne troši, nije u iznosu gore</div>' : '') + pendingLine('wal-env wal-pend') +
     (!state.settings.walletInit && (!state.wallet.length || cash < 0 || bank < 0) ? '<button type="button" class="wal-env wal-pend" data-act="wallet-init">👛 Upiši koliko stvarno imaš sada (keš i račun) <span class="pl-go">›</span></button>' : '') +
-    '<div class="wal-btns"><button type="button" class="btn main" data-act="wal-in">+ Ubaci</button><button type="button" class="btn" data-act="wal-out">Potrošio</button>' +
+    '<div class="wal-btns"><button type="button" class="btn main" data-act="wal-swipe">⇆ Ulaz / izlaz</button>' +
       '<button type="button" class="btn" data-act="wal-alloc">Raspodeli</button></div>' +
     '<div class="wal-links"><button type="button" class="wal-move" data-act="wal-move">⇄ Keš ↔ račun</button><button type="button" class="wal-move" data-act="wal-all">☰ Sve promene</button></div></div>';
   setHTML($('#walletCard'), h);
@@ -3969,39 +4165,95 @@ function closeSettings(){
   var ae = document.activeElement; if (ae && pg.contains(ae) && ae.blur) ae.blur();
   updateLock();
 }
-function updateLock(){ document.documentElement.classList.toggle('locked', !!setOpen || bankerOpen() || !$('#overlay').hidden && $('#overlay').classList.contains('open')); }
+function updateLock(){
+  var ovOpen = !$('#overlay').hidden && $('#overlay').classList.contains('open');
+  document.documentElement.classList.toggle('locked', !!setOpen || bankerOpen() || ovOpen);
+  if (ovOpen) document.documentElement.style.setProperty('--oy', Math.round(window.scrollY + window.innerHeight * 0.45) + 'px');
+  document.documentElement.classList.toggle('sheet-on', ovOpen && !reduced());
+  if (!ovOpen && kpOn) kpClose(false);
+}
 
 /* ================== Tabovi ================== */
 function switchTab(name){
   if (name === tab) { window.scrollTo({ top: 0, behavior: reduced() ? 'auto' : 'smooth' }); return; }
-  var oldI = TABS.indexOf(tab), newI = TABS.indexOf(name);
-  tabScroll[tab] = window.scrollY;
-  $('#v-' + tab).hidden = true;
-  var v = $('#v-' + name);
-  v.hidden = false;
-  v.classList.remove('in-r', 'in-l');
-  void v.offsetWidth;
-  if (!reduced()) v.classList.add(newI > oldI ? 'in-r' : 'in-l');
+  finishSlide();
+  var oldI = TABS.indexOf(tab), newI = TABS.indexOf(name), dir = newI > oldI ? 1 : -1;
+  var oldV = $('#v-' + tab), v = $('#v-' + name), y0 = window.scrollY, y1 = tabScroll[name] || 0;
+  tabScroll[tab] = y0;
+  if (kpOn) kpClose(false);
   tab = name;
+  pillMove();
   document.querySelectorAll('.tab').forEach(function(b){
     var on = b.getAttribute('data-tab') === name;
     b.classList.toggle('on', on);
     if (on) b.setAttribute('aria-current', 'page'); else b.removeAttribute('aria-current');
   });
   $('#topTitle').textContent = TITLES[name];
-  window.scrollTo(0, tabScroll[name] || 0);
-  lastY = window.scrollY;
-  onScroll();
+  if (reduced() || !oldV) {
+    if (oldV) oldV.hidden = true;
+    v.hidden = false; window.scrollTo(0, y1); lastY = window.scrollY; onScroll();
+    enterView(name); if (enterPost) { var f = enterPost; enterPost = null; f(); }
+    return;
+  }
+  /* Obe strane se „zamrznu“ na veličinu ekrana (fixed + overflow:hidden), pa telefon pomera
+     samo dve slike veličine ekrana umesto celih dugačkih strana — zato nema seckanja */
+  var r = oldV.getBoundingClientRect(), docTop = r.top + y0, H = window.innerHeight;
+  v.hidden = false;
   enterView(name);
+  document.documentElement.classList.add('tabbing');
+  freezeView(oldV, r.left, r.width, docTop, y0, H);
+  freezeView(v, r.left, r.width, docTop, y1, H);
+  slide = { oldV: oldV, v: v, y1: y1, raf: 0, t: 0 };
+  /* animacija kreće tek kad su obe slike spremne (dva frejma) — nema trzaja na početku */
+  slide.raf = requestAnimationFrame(function(){
+    slide.raf = requestAnimationFrame(function(){
+      slide.raf = 0;
+      oldV.classList.add(dir > 0 ? 'out-l' : 'out-r');
+      v.classList.add(dir > 0 ? 'in-r' : 'in-l');
+      slide.t = setTimeout(finishSlide, SLIDE_MS + 30);
+    });
+  });
 }
+var slide = null, SLIDE_MS = 280, enterPost = null;
+function freezeView(v, left, width, docTop, y, H){
+  var top = Math.max(0, docTop - y);
+  v.classList.add('frz');
+  v.style.left = left + 'px'; v.style.width = width + 'px'; v.style.top = top + 'px'; v.style.height = (H - top) + 'px';
+  v.scrollTop = Math.max(0, y - docTop);
+}
+function unfreezeView(v){
+  v.classList.remove('frz', 'in-r', 'in-l', 'out-l', 'out-r');
+  v.style.left = v.style.width = v.style.top = v.style.height = '';
+  v.scrollTop = 0;
+}
+function finishSlide(){
+  if (!slide) return;
+  var s = slide; slide = null;
+  if (s.raf) cancelAnimationFrame(s.raf);
+  clearTimeout(s.t);
+  s.oldV.hidden = true; unfreezeView(s.oldV);
+  unfreezeView(s.v);
+  document.documentElement.classList.remove('tabbing');
+  window.scrollTo(0, s.y1);
+  lastY = window.scrollY; onScroll();
+  if (enterPost) { var f = enterPost; enterPost = null; f(); }
+}
+/* Ulazak na stranu: dok strana klizi ne radi se ništa teško;
+   brojevi, trake, kasice i kartice krenu tek kad strana stane */
 function enterView(name){
   var v = $('#v-' + name);
-  runCounts(v);
-  if (reduced()) { runBars(v); runPigs(v); return; }
-  runBars(v, true); runPigs(v, true);
-  if (name === 'charts') ['#chartTips', '#chartTipsMonth', '#chartSpend', '#chartWeeks'].forEach(function(x){ restartAnim($(x)); });
-  if (name === 'home') { restartAnim($('#tips')); enterHome(); }
-  stagger(v);
+  enterPost = null;
+  if (reduced()) { enterPost = function(){ runCounts(v); runBars(v); runPigs(v); }; return; }
+  var fills = [];
+  v.querySelectorAll('[data-bk]').forEach(function(el){ if (isShown(el)) { el.style.transition = 'none'; el.style.transform = 'translate3d(-100%,0,0)'; fills.push(el); } });
+  v.querySelectorAll('.pig-fill[data-pk]').forEach(function(el){ if (isShown(el) && !coinHold[el.getAttribute('data-pk')]) { el.style.transition = 'none'; el.style.transform = 'translateY(' + pigY(0) + 'px)'; fills.push(el); } });
+  enterPost = function(){
+    if (tab !== name) return;
+    fills.forEach(function(el){ el.style.transition = ''; });
+    runCounts(v); runBars(v); runPigs(v);
+    if (name === 'charts') ['#chartTips', '#chartTipsMonth', '#chartSpend', '#chartWeeks'].forEach(function(x){ restartAnim($(x)); });
+    /* 3D ulazak kartica početne ide samo pri otvaranju aplikacije — pri povratku na tab je izazivao trzaj */
+  };
 }
 var scrollRaf = 0, lastY = 0;
 function onScroll(){
@@ -5415,6 +5667,248 @@ function settingsLook(){
       return '<button type="button" class="chip' + (hm === x[0] ? ' on' : '') + '" data-act="home-main" data-v="' + x[0] + '">' + x[1] + '</button>'; }).join('') + '</div></section>';
 }
 
+/* ================== DIZAJN v3 (po uzoru na video) — samo izgled i pokreti, funkcije iste ================== */
+/* List: sve ispod „vrha“ svake strane ide u zaobljeni list */
+var PANE_AFTER = { 'v-home': '#wstack', 'v-cal': '.msw', 'v-wal': '#walletCard', 'v-jars': '#jarsTop', 'v-charts': '.msw' };
+function buildPanes(){
+  Object.keys(PANE_AFTER).forEach(function(id){
+    var v = document.getElementById(id); if (!v || v.querySelector(':scope > .pane')) return;
+    var split = v.querySelector(':scope > ' + PANE_AFTER[id]); if (!split) return;
+    var pane = document.createElement('div'); pane.className = 'pane';
+    var n = split.nextElementSibling;
+    while (n) { var nx = n.nextElementSibling; pane.appendChild(n); n = nx; }
+    v.appendChild(pane);
+  });
+}
+/* Pilula: bela kapsula klizi do aktivnog taba; tekst ostaje za čitače ekrana */
+function pillInit(){
+  var tb = $('.tabbar'); if (!tb || tb.querySelector('.tab-ind')) return;
+  var ind = document.createElement('i'); ind.className = 'tab-ind'; ind.setAttribute('aria-hidden', 'true');
+  tb.insertBefore(ind, tb.firstChild);
+  tb.querySelectorAll('.tab').forEach(function(b){ if (!b.getAttribute('aria-label')) b.setAttribute('aria-label', b.textContent.trim()); });
+  pillMove();
+}
+function pillMove(){
+  var ind = $('.tab-ind'); if (!ind) return;
+  var i = TABS.indexOf(tab); ind.style.transform = 'translateX(' + (Math.max(0, i) * 100) + '%)';
+}
+/* Iznos sa sitnim decimalama (u evrima ,43 sitno) */
+function decHtml(n){
+  var s = cf(n), i = s.lastIndexOf(',');
+  return i < 0 ? s : s.slice(0, i) + '<small class="dec">' + s.slice(i) + '</small>';
+}
+function isBigNum(el){ return !!(el.closest && el.closest('.wc-big b, .wal-num, .hero-num, .sug-big')); }
+
+/* ---------- Krug uspeha posle unosa novca ---------- */
+var okLast = 0, okTimer = null, tapX = null, tapY = null;
+document.addEventListener('pointerdown', function(e){ tapX = e.clientX; tapY = e.clientY; }, { capture: true, passive: true });
+function successFx(amount, label, dir){
+  var now = Date.now();
+  if (now - okLast < 1300 || !(amount > 0)) return;
+  okLast = now;
+  var fx = $('#okfx'); if (!fx) return;
+  var out = dir === 'out', x = tapX == null ? window.innerWidth / 2 : tapX, y = tapY == null ? window.innerHeight * 0.6 : tapY;
+  var far = Math.hypot(Math.max(x, window.innerWidth - x), Math.max(y, window.innerHeight - y));
+  fx.className = ''; fx.hidden = false;
+  fx.style.setProperty('--x', x + 'px'); fx.style.setProperty('--y', y + 'px'); fx.style.setProperty('--s', Math.ceil(far / 20 + 1));
+  fx.style.setProperty('--c', out ? 'var(--c-red)' : 'var(--c-green)'); fx.style.setProperty('--ink', out ? 'var(--c-red-ink)' : 'var(--c-green-ink)');
+  fx.innerHTML = '<i class="ring"></i><div class="ok-c">' + ic('check') + '<b class="num">' + (out ? '−' : '+') + decHtml(amount) + ' ' + curLbl() + '</b><span>' + esc(label || '') + '</span></div>';
+  if (reduced()) fx.querySelector('.ring').style.transform = 'scale(' + Math.ceil(far / 20 + 1) + ')';
+  clearTimeout(okTimer);
+  okTimer = setTimeout(function(){ fx.classList.add('bye'); okTimer = setTimeout(function(){ fx.hidden = true; fx.innerHTML = ''; fx.className = ''; }, 340); }, 1000);
+}
+
+/* ---------- Sopstvena tastatura sa + − × ÷ (telefon/tablet) ---------- */
+var KP_SEL = 'input.amt-in, input[inputmode="numeric"], input[inputmode="decimal"], input[data-kp]';
+var kp = null, kpOn = false;
+function kpWanted(){ try { return window.matchMedia('(pointer: coarse)').matches; } catch (e) { return false; } }
+function kpBuild(){
+  if ($('#kp')) return;
+  var d = document.createElement('div'); d.id = 'kp'; d.setAttribute('role', 'group'); d.setAttribute('aria-label', 'Tastatura za iznos');
+  var keys = [['+', 'op'], ['−', 'op'], ['×', 'op'], ['÷', 'op'], ['1'], ['2'], ['3'], ['⌫', 'bs'], ['4'], ['5'], ['6'], [',', 'dot'], ['7'], ['8'], ['9'], ['=', 'eq'], ['C', 'clr'], ['0'], ['00'], ['Gotovo', 'ok']];
+  d.innerHTML = '<div class="kp-disp"><span id="kpExpr"></span><b class="num" id="kpRes"></b></div><div class="kp-g">' +
+    keys.map(function(k){ return '<button type="button" class="' + (k[1] || 'n') + '" data-kp="' + k[0] + '" aria-label="' + ({ '⌫': 'Obriši', 'C': 'Očisti sve', '÷': 'Podeli', '×': 'Pomnoži', '−': 'Oduzmi', '+': 'Saberi' }[k[0]] || k[0]) + '">' + k[0] + '</button>'; }).join('') + '</div>';
+  document.body.appendChild(d);
+  d.addEventListener('pointerdown', function(e){ e.preventDefault(); });
+  d.addEventListener('click', function(e){ var b = e.target.closest('button[data-kp]'); if (b && kp) kpKey(b.getAttribute('data-kp')); });
+}
+function kpMoney(el){ return el.classList.contains('amt-in'); }
+function kpDec(el){ return kpMoney(el) ? fieldCur(el) === 'EUR' : (el.dataset.kp || el.getAttribute('inputmode')) === 'decimal'; }
+function kpNum(s){ var n = parseFloat(String(s || '0').replace(',', '.')); return isFinite(n) ? n : 0; }
+function kpEval(t){
+  var vals = [], ops = [], i;
+  for (i = 0; i < t.length; i++) { if (i % 2 === 0) vals.push(kpNum(t[i])); else ops.push(t[i]); }
+  if (vals.length > ops.length + 1) vals.length = ops.length + 1;
+  var v2 = [vals[0]], o2 = [];
+  for (i = 0; i < ops.length; i++) {
+    if (vals[i + 1] === undefined) break;
+    if (ops[i] === '×') v2[v2.length - 1] *= vals[i + 1];
+    else if (ops[i] === '÷') v2[v2.length - 1] = vals[i + 1] ? v2[v2.length - 1] / vals[i + 1] : v2[v2.length - 1];
+    else { o2.push(ops[i]); v2.push(vals[i + 1]); }
+  }
+  var r = v2[0];
+  for (i = 0; i < o2.length; i++) r = o2[i] === '+' ? r + v2[i + 1] : r - v2[i + 1];
+  return Math.max(0, r);
+}
+function kpShowNum(s){
+  if (s === '' || s == null) return '';
+  var p = String(s).split(','), ip = p[0] ? fmt(parseInt(p[0], 10)) : '0';
+  return p.length > 1 ? ip + ',' + p[1] : ip;
+}
+function kpOpen(el){
+  kpBuild();
+  if (kp && kp.el === el) return;
+  kpCommit();
+  var raw = el.value || '', n = kpMoney(el) ? parseNum(raw) : kpNum(raw.replace(/\./g, ''));
+  var start = n > 0 ? String(kpDec(el) ? Math.round(n * 100) / 100 : Math.round(n)).replace('.', ',') : '';
+  kp = { el: el, t: [start], v0: raw, fresh: true };
+  if (!el.dataset.kp) el.dataset.kp = el.getAttribute('inputmode') || 'numeric';
+  el.setAttribute('inputmode', 'none'); el.readOnly = true;
+  kpOn = true; document.documentElement.classList.add('kp-on');
+  var pad = $('#kp'); pad.classList.add('on');
+  document.documentElement.style.setProperty('--kph', (pad.offsetHeight + 16) + 'px');
+  pad.querySelector('[data-kp=","]').disabled = !kpDec(el);
+  kpRender();
+  setTimeout(function(){ try { el.scrollIntoView({ block: 'center', behavior: reduced() ? 'auto' : 'smooth' }); } catch (e) {} }, 60);
+}
+function kpRender(){
+  if (!kp) return;
+  var t = kp.t, hasOp = t.length > 1, r = kpEval(t), el = kp.el;
+  var ex = t.map(function(x, i){ return i % 2 ? ' ' + x + ' ' : kpShowNum(x); }).join('');
+  $('#kpExpr').textContent = hasOp ? ex : '';
+  var rv = kpDec(el) ? Math.round(r * 100) / 100 : Math.round(r);
+  var resB = $('#kpRes'), newRes = hasOp ? '= ' + kpShowNum(String(rv).replace('.', ',')) : '';
+  if (resB.textContent !== newRes) { resB.textContent = newRes; if (newRes && !reduced()) { resB.classList.remove('pop'); void resB.offsetWidth; resB.classList.add('pop'); } }
+  document.querySelectorAll('#kp .op').forEach(function(b){ b.classList.toggle('on', hasOp && t.length % 2 === 0 && t[t.length - 1] === b.getAttribute('data-kp')); });
+  var v;
+  if (!hasOp) v = kpMoney(el) ? kpShowNum(t[0]) : (t[0] || '');
+  else v = kpMoney(el) ? kpShowNum(String(rv).replace('.', ',')) : String(rv).replace('.', ',');
+  if (!kpMoney(el)) v = v.replace(/\./g, '');
+  el.value = rv || t[0] ? v : '';
+  el.removeAttribute('data-rsd'); el.removeAttribute('data-disp');
+  el.dispatchEvent(new Event('input', { bubbles: true }));
+}
+function kpKey(k){
+  var t = kp.t, last = t.length - 1, cur = t[last];
+  if (buzz) buzz(6);
+  if (k === 'Gotovo' || k === 'ok') { kpClose(true); return; }
+  if (k === 'C' || k === 'clr') { kp.t = ['']; kpRender(); return; }
+  if (k === '⌫') {
+    if (last % 2 === 1) t.pop();
+    else if (cur) t[last] = cur.slice(0, -1);
+    else if (last > 0) { t.pop(); }
+    kpRender(); return;
+  }
+  if (!/^(\d{1,2}|,|=|[+−×÷])$/.test(k)) return;
+  if (k === '=') { var r = kpEval(t), rv = kpDec(kp.el) ? Math.round(r * 100) / 100 : Math.round(r); kp.t = [rv ? String(rv).replace('.', ',') : '']; kpRender(); return; }
+  if ('+−×÷'.indexOf(k) >= 0) {
+    if (last % 2 === 1) t[last] = k;
+    else if (cur !== '' || last > 0) t.push(k, '');
+    kp.fresh = false; kpRender(); return;
+  }
+  if (last % 2 === 1) { t.push(''); last++; cur = ''; }
+  if (kp.fresh && last === 0) { cur = ''; kp.fresh = false; }
+  if (k === ',') { if (!kpDec(kp.el) || cur.indexOf(',') >= 0) return; cur = (cur || '0') + ','; }
+  else {
+    if (cur.indexOf(',') >= 0 && cur.split(',')[1].length >= 2) return;
+    if (cur.replace(/\D/g, '').length >= 9) return;
+    cur = (cur === '0' ? '' : cur) + k;
+    if (/^0+$/.test(cur)) cur = '0';
+  }
+  t[last] = cur; kpRender();
+}
+function kpCommit(){
+  if (!kp) return;
+  var el = kp.el, changed = el.value !== kp.v0;
+  if (kp.t.length > 1) { kp.t = [String(kpDec(el) ? Math.round(kpEval(kp.t) * 100) / 100 : Math.round(kpEval(kp.t))).replace('.', ',')]; kpRender(); }
+  el.readOnly = false; el.setAttribute('inputmode', el.dataset.kp || 'numeric');
+  kp = null;
+  if (changed) el.dispatchEvent(new Event('change', { bubbles: true }));
+}
+function kpClose(done){
+  if (!kpOn) return;
+  var el = kp && kp.el;
+  kpCommit();
+  kpOn = false; document.documentElement.classList.remove('kp-on');
+  var pad = $('#kp'); if (pad) pad.classList.remove('on');
+  if (el && el.blur) el.blur();
+  if (done && el) el.dispatchEvent(new Event('focusout', { bubbles: true }));
+}
+document.addEventListener('focusin', function(e){
+  var t = e.target;
+  if (!t || !t.matches) return;
+  if (t.matches(KP_SEL) && kpWanted()) kpOpen(t);
+  else if (kpOn && !kpOut && !(t.closest && t.closest('#kp'))) kpClose(false);
+});
+/* Dodir van tastature zatvara je tek POSLE dodira, da se ekran ne pomeri ispod prsta i dodir ne promaši dugme */
+var kpOut = false;
+document.addEventListener('pointerdown', function(e){
+  if (!kpOn) return;
+  var t = e.target;
+  kpOut = !(t.closest && (t.closest('#kp') || (t.matches && t.matches(KP_SEL))));
+}, true);
+function kpOutUp(){ if (!kpOut) return; kpOut = false; setTimeout(function(){ if (kpOn) kpClose(false); }, 0); }
+document.addEventListener('pointerup', kpOutUp, true);
+document.addEventListener('pointercancel', kpOutUp, true);
+
+/* ---------- Novčanik: prevlaka desno = ulaz (zeleno), levo = izlaz (crveno) ---------- */
+function openSwipe(hint){
+  sheet = { mode: 'swipe', acc: 'cash', hint: hint || '' };
+  renderSwipe(0, '');
+  openSheet('Novčanik — ulaz ili izlaz');
+  focusNow($('#swAmt'));
+}
+function renderSwipe(v, note){
+  var o = sheet;
+  $('#sheetBody').innerHTML = accSeg('sw-acc', o.acc, '💵 Keš', '💳 Kartica') +
+    '<div class="field"><label class="lbl" for="swAmt">Iznos</label>' + moneyInput('id="swAmt"', v, '0', 'big') + '</div>' +
+    '<div class="field"><label class="lbl" for="swNote">Na šta / odakle (opciono)</label><input class="inp" id="swNote" maxlength="40" autocomplete="off" placeholder="npr. hrana, pozajmica vraćena" value="' + esc(note || '') + '"></div>' +
+    '<div class="swipe" id="swipe" role="slider" aria-label="Prevuci desno za ulaz, levo za izlaz" aria-valuemin="-1" aria-valuemax="1" aria-valuenow="0" tabindex="0">' +
+      '<span class="sw-l">← Izlaz</span><span class="sw-r">Ulaz →</span><i class="sw-knob">⇆</i></div>' +
+    '<p class="sw-hint">Prevuci <b style="color:var(--acc-text)">desno za ulaz</b> ili <b style="color:var(--red-text)">levo za izlaz</b> (potrošnja)</p>' +
+    '<div class="sw-alt"><button type="button" class="btn" data-act="sw-go" data-v="out">− Izlaz</button><button type="button" class="btn" data-act="sw-go" data-v="in">+ Ulaz</button></div>';
+  $('#sheetFoot').innerHTML = '';
+  swipeBind();
+}
+function swipeBind(){
+  var tr = $('#swipe'); if (!tr) return;
+  var knob = tr.querySelector('.sw-knob'), x0 = 0, dx = 0, on = false, max = 0;
+  function set(v){
+    dx = Math.max(-max, Math.min(max, v));
+    knob.style.transform = 'translateX(' + dx + 'px)';
+    var f = max ? Math.abs(dx) / max : 0;
+    tr.style.setProperty('--o', f.toFixed(2));
+    tr.classList.toggle('l', dx < -4); tr.classList.toggle('r', dx > 4);
+  }
+  tr.addEventListener('pointerdown', function(e){
+    if (!e.target.closest('.sw-knob')) return;
+    on = true; x0 = e.clientX - dx; max = tr.offsetWidth / 2 - 33; tr.classList.add('drag');
+    try { tr.setPointerCapture(e.pointerId); } catch (x) {}
+  });
+  tr.addEventListener('pointermove', function(e){ if (on) set(e.clientX - x0); });
+  function up(){
+    if (!on) return;
+    on = false; tr.classList.remove('drag');
+    if (max && Math.abs(dx) > max * 0.62) { var dir = dx > 0 ? 'in' : 'out'; set(dx > 0 ? max : -max); swipeGo(dir, function(){ set(0); }); }
+    else set(0);
+  }
+  tr.addEventListener('pointerup', up); tr.addEventListener('pointercancel', up);
+  tr.addEventListener('keydown', function(e){
+    if (e.key === 'ArrowRight') { e.preventDefault(); swipeGo('in'); }
+    else if (e.key === 'ArrowLeft') { e.preventDefault(); swipeGo('out'); }
+  });
+}
+function swipeGo(dir, undo){
+  if (!sheet || sheet.mode !== 'swipe') return;
+  var a = parseAmt($('#swAmt')), note = ($('#swNote').value || '').trim(), acc = sheet.acc;
+  if (!a) { toast('Upiši iznos.'); focusNow($('#swAmt')); if (undo) undo(); return; }
+  checkBig(a, dir === 'in' ? 'money' : 'spend', function(){
+    closeSheet();
+    if (dir === 'in') walletTx(a, note || 'Ubačeno', acc);
+    else addTodaySpend(a, note, acc);
+  }, function(){ if (undo) undo(); focusNow($('#swAmt')); });
+}
+
 /* ================== 2. Prvo plati sebe ================== */
 function openPayFirst(pay){
   var avail = availJars();
@@ -5965,6 +6459,9 @@ document.addEventListener('click', function(e){
       break;
     case 'theme': ui.theme = b.getAttribute('data-v') === 'auto' ? '' : b.getAttribute('data-v'); saveUi(); applyTheme(); renderSettings(); break;
     case 'home-main': ui.homeMain = b.getAttribute('data-v'); if (ui.homeMain !== 'last') ui.homeCard = ui.homeMain; saveUi(); renderSettings(); $('#wstack').__h = null; renderHome(); afterRender(); break;
+    case 'wal-swipe': openSwipe(); break;
+    case 'sw-acc': if (sheet && sheet.mode === 'swipe') { var swv = parseAmt($('#swAmt')), swn = $('#swNote').value; sheet.acc = b.getAttribute('data-v'); renderSwipe(swv, swn); } break;
+    case 'sw-go': swipeGo(b.getAttribute('data-v')); break;
     case 'ask-yes': closeAsk(true); break;
     case 'ask-no': closeAsk(false); break;
     case 'tp-d': case 'tp-s':
@@ -7216,6 +7713,7 @@ applyTheme();
 try { if (window.matchMedia) window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', applyTheme); } catch (e) {}
 if (!ui.homeMain) ui.homeMain = 'wallet';
 if (ui.homeMain !== 'last') { ui.homeCard = ui.homeMain; saveUi(); }
+buildPanes();
 setupIcon();
 /* Offline keš: sw.js (isti folder kao index.html) čuva aplikaciju da se otvara i bez interneta */
 try {
@@ -7224,6 +7722,23 @@ try {
   }
 } catch (e) {}
 ready = true;
+pillInit();
+/* Krug uspeha posle svakog unosa novca (omotači — same funkcije se ne menjaju) */
+(function(){
+  var _walletTx = walletTx; walletTx = function(a, n, acc){ var r = _walletTx.apply(this, arguments); successFx(Math.abs(a), (a > 0 ? 'Ubačeno' : 'Izvađeno') + (acc === 'bank' ? ' · kartica' : ' · keš'), a > 0 ? 'in' : 'out'); return r; };
+  var _addTodaySpend = addTodaySpend; addTodaySpend = function(a, n, acc){ var r = _addTodaySpend.apply(this, arguments); successFx(a, 'Potrošeno' + (n ? ' · ' + n : '') + (acc === 'bank' ? ' · kartica' : ''), 'out'); return r; };
+  var _addSpendNow = addSpendNow; addSpendNow = function(acc){ var a = $('#spendAmt') ? parseAmt($('#spendAmt')) : 0; var r = _addSpendNow.apply(this, arguments); successFx(a, 'Potrošeno', 'out'); return r; };
+  var _deposit = deposit; deposit = function(id, a){ var j = jarById(id); var r = _deposit.apply(this, arguments); successFx(a, 'U kasicu' + (j ? ' „' + j.name + '“' : ''), 'in'); return r; };
+  var _withdraw = withdraw; withdraw = function(id, a){ var j = jarById(id); var r = _withdraw.apply(this, arguments); successFx(a, 'Izvađeno iz kasice' + (j ? ' „' + j.name + '“' : ''), 'out'); return r; };
+  var _saveDay = saveDay; saveDay = function(){ var a = sheet && sheet.mode === 'day' ? sheetTotal() : 0; var r = _saveDay.apply(this, arguments); if (!(sheet && sheet.mode === 'day')) successFx(a, 'Zarada upisana', 'in'); return r; };
+  var _doAlloc = doAlloc; doAlloc = function(){ var a = sheet && sheet.vals ? Object.keys(sheet.vals).reduce(function(s, k){ return s + (sheet.vals[k] || 0); }, 0) : 0; var r = _doAlloc.apply(this, arguments); successFx(a, 'Raspoređeno', 'in'); return r; };
+  var _doTipSheet = doTipSheet; doTipSheet = function(){ var A = sheet && sheet.mode === 'tip' ? tipAmounts() : null; if (A && A.d + A.s > 0) successFx(A.d + A.s, 'Bakšiš odvojen', 'in'); return _doTipSheet.apply(this, arguments); };
+  var _execRes = execReservations; execReservations = function(list, amounts){ var a = (amounts || []).reduce(function(s, x){ return s + (x || 0); }, 0); var r = _execRes.apply(this, arguments); successFx(r || a, 'Iz plate raspoređeno', 'in'); return r; };
+  var _setPaid = setPaid; setPaid = function(key, e, on){ var x = e && findExp(key, e.id); var r = _setPaid.apply(this, arguments); if (on && x) successFx(x.amount, 'Plaćeno „' + (x.name || 'Obaveza') + '“', 'out'); return r; };
+  var _doFill = doFill; doFill = function(){ var x = sheet ? findExp(sheet.key, sheet.id) : null, a = $('#amtInput') ? parseAmt($('#amtInput')) : 0; var r = _doFill.apply(this, arguments); successFx(a, 'U kovertu' + (x ? ' „' + (x.name || '') + '“' : ''), 'in'); return r; };
+  var _doStash = doStash; doStash = function(){ var a = sheet && sheet.mode === 'stash' ? stashAmt() : 0; var r = _doStash.apply(this, arguments); successFx(a, 'Odvojeno', 'in'); return r; };
+  var _doDayLeft = doDayLeft; doDayLeft = function(){ var a = $('#dlAmt') ? parseAmt($('#dlAmt')) : 0, keep = sheet && sheet.to === 'keep'; var r = _doDayLeft.apply(this, arguments); if (!keep) successFx(a, 'Ostatak dana prebačen', 'in'); return r; };
+})();
 snapshot('dnevna kopija');
 renderAll();
 renderSyncUi();
